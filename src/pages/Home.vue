@@ -16,14 +16,14 @@
                                 aria-hidden="true">→</span></a>
                     </div>
                 </div>
-                <div class="relative h-80 lg:mt-8 md:mt-4  sm:h-auto sm:flex sm:items-end mt-8 mb-8">
-    <img class="absolute inset-0 w-full h-full object-cover sm:relative sm:object-contain sm:w-auto sm:h-auto rounded-md bg-white/5 ring-1 ring-white/10"
-        src="/public/11.jpg" alt="App screenshot" width="1824" height="1080" />
-</div>
+                  <div class="relative h-80 lg:mt-8 md:mt-4  sm:h-auto sm:flex sm:items-end mt-8 mb-8">
+                   <img class="absolute inset-0 w-full h-full object-cover sm:relative sm:object-contain sm:w-auto sm:h-auto rounded-md bg-white/5 ring-1 ring-white/10"
+                   src="/public/11.jpg" alt="App screenshot" width="1824" height="1080" />
+                  </div>
 
             </div>
         </div>
-    </div>
+    
 
 
     <div class="relative max-w-[85%] max-h-[85%] isolate overflow-hidden bg-white  sm:py-20 p-10 rounded-lg shadow-lg mb-40 mx-auto flex justify-center items-center">
