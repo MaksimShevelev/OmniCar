@@ -2,17 +2,16 @@
     <div class="flex flex-col h-screen">
 
         <!-- Header -->
-        <header class="top-0 left-0 right-0 bg-custom-green-dark p-4 text-white flex items-center justify-between rounded-b-lg shadow-lg z-20">
+        <header class="top-0 left-0 right-0 bg-custom-green-dark p-8 text-white flex items-center justify-center relative rounded-b-lg shadow-lg z-20">
                 <!-- Кнопка меню слева -->
-            <Popover class="relative z-20">
-                <PopoverButton
-                    class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-custom-green text-white border border-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M1 2a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1zM1 8a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1zM1 14a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1z" />
-                    </svg>
-                </PopoverButton>
-
+                <Popover class="absolute left-0 z-20 ml-4">
+    <PopoverButton
+      class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-custom-green text-white border border-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+          d="M1 2a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1zM1 8a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1zM1 14a1 1 0 0 1 1-1h12a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1z" />
+      </svg>
+    </PopoverButton>
                 <transition enter-active-class="transition ease-out duration-200"
                     enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0"
                     leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100 translate-y-0"
@@ -21,7 +20,7 @@
                         <div
                             class="w-64 flex-auto overflow-hidden rounded-3xl bg-white text-sm shadow-lg ring-1 ring-gray-900/5">
                             <div class="flex flex-col w-64 bg-white text-white">
-                                
+                            
 
 
      
@@ -136,15 +135,17 @@
             </Popover>
 
                 <!-- Кнопка колокольчика справа с выпадающим меню -->
-    <Popover class="relative z-20">
-        <PopoverButton
-            class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-custom-green text-white border border-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                class="bi bi-bell-fill" viewBox="0 0 16 16">
-                <path
-                    d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
-            </svg>
-        </PopoverButton>
+
+        <Popover class="absolute right-0 z-20 mr-4">
+    <PopoverButton
+      class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-custom-green text-white border border-white hover:bg-green-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bell-fill"
+        viewBox="0 0 16 16">
+        <path
+          d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
+      </svg>
+    </PopoverButton>
+
 
         <transition enter-active-class="transition ease-out duration-200"
                     enter-from-class="opacity-0 translate-y-1" enter-to-class="opacity-100 translate-y-0"
@@ -262,4 +263,20 @@ export default {
 .border-custom-green {
     border-color: #239e61; /* Цвет, который вы указали ранее */
 }
+
+
+header {
+  display: flex;
+  justify-content: center;
+  position: relative; /* Для абсолютного позиционирования кнопок */
+}
+
+header .absolute.left-0 {
+  left: 0;
+}
+
+header .absolute.right-0 {
+  right: 0;
+}
+
 </style>
