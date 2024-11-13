@@ -64,7 +64,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 
 let unsubscribeAuth = () => {};
 
-mapboxgl.accessToken = 'YOUR_MAPBOX_ACCESS_TOKEN';
+mapboxgl.accessToken = 'pk.eyJ1IjoibWF4aWFzZGRzYWRzZGYiLCJhIjoiY20ydGM4MGFzMDFrZDJrb2gyMGV5ajFnMCJ9.l0ZQB85L5nD3LWTRYM0hlA';
 
 export default {
     name: 'ConstruirRuta',
