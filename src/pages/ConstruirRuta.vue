@@ -27,7 +27,7 @@
             </div>
 
             <button @click="getRoute" class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
-                Crear
+                Construir
             </button>
         </section>
 
@@ -61,6 +61,8 @@ import { subscribeToAuthState } from '../services/auth.js';
 import { saveTrip } from '../services/viajes.js';
 import { uploadFile } from "../services/file-storage";
 import 'mapbox-gl/dist/mapbox-gl.css';
+import polyline from '@mapbox/polyline';
+
 
 let unsubscribeAuth = () => {};
 
@@ -101,6 +103,7 @@ export default {
             const data = await response.json();
             return data.features[0]?.geometry.coordinates;
         },
+
         async getRoute() {
     if (!this.origin.city || !this.destination.city) {
         alert("Please enter valid cities for origin and destination.");
@@ -115,21 +118,66 @@ export default {
         return;
     }
 
-    const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=polyline&access_token=${mapboxgl.accessToken}`;
-    const response = await fetch(directionsUrl);
+    // Запрос к Mapbox Directions API
+    const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=polyline&access_token=${mapboxgl.accessToken}`;
+    const response = await fetch(url);
     const data = await response.json();
-    const route = data.routes[0].geometry;
+
+    if (!data.routes || data.routes.length === 0) {
+        alert("No route found.");
+        return;
+    }
+
+    const route = data.routes[0].geometry; // Encoded polyline
+
+    // Декодируем polyline в массив координат
+    const coordinates = polyline.decode(route);
+
+    // Преобразуем координаты в формат GeoJSON
+    const geojson = {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+            type: 'LineString',
+            coordinates: coordinates.map(coord => [coord[1], coord[0]]), // Меняем порядок на [долгота, широта]
+        },
+    };
 
     this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2);
     const totalMinutes = Math.round(data.routes[0].duration / 60);
     this.routeInfo.duration = { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
     const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1000;
-
     this.routeInfo.recommendedPrice = this.numSeats > 0 ? (basePrice / this.numSeats).toFixed(2) : basePrice.toFixed(2);
 
+    // Удаляем предыдущий маршрут, если он существует
+    if (this.routeLayer) {
+        this.map.removeLayer('route');
+        this.map.removeSource('route');
+    }
+
+    // Добавляем маршрут на карту
+    this.map.addSource('route', {
+        type: 'geojson',
+        data: geojson,
+    });
+
+    this.map.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: { 'line-color': '#239e61', 'line-width': 5, 'line-opacity': 0.75 },
+    });
+
+    this.routeLayer = 'route';
+
+    // Анимируем карту, чтобы показать маршрут целиком
+    const bounds = new mapboxgl.LngLatBounds();
+    coordinates.forEach(coord => bounds.extend([coord[1], coord[0]]));
+    this.map.fitBounds(bounds, { padding: 20 });
+
     // Использование Static API для получения снимка карты с маршрутом
-    const polyline = route; // Encoded polyline from Mapbox Directions API
-    const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s-a+9ed4bd(${originCoordinates[0]},${originCoordinates[1]}),pin-s-b+000(${destinationCoordinates[0]},${destinationCoordinates[1]}),path-5+f44-0.5(${encodeURIComponent(polyline)})/auto/800x600?access_token=${mapboxgl.accessToken}`;
+    const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s-a+9ed4bd(${originCoordinates[0]},${originCoordinates[1]}),pin-s-b+000(${destinationCoordinates[0]},${destinationCoordinates[1]}),path-5+f44-0.5(${encodeURIComponent(route)})/auto/800x600?access_token=${mapboxgl.accessToken}`;
 
     try {
         const mapResponse = await fetch(staticMapUrl);
@@ -152,7 +200,6 @@ export default {
         console.error('Error while saving map snapshot:', error);
     }
 }
-
 
 ,
 
