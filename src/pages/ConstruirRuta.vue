@@ -27,7 +27,7 @@
             </div>
 
             <button @click="getRoute" class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
-                Construir
+                Crear
             </button>
         </section>
 
