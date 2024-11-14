@@ -101,104 +101,85 @@ export default {
             const data = await response.json();
             return data.features[0]?.geometry.coordinates;
         },
-
         async getRoute() {
-            if (!this.origin.city || !this.destination.city) {
-                alert("Please enter valid cities for origin and destination.");
-                return;
-            }
-            const originCoordinates = await this.getCoordinates(this.origin.city);
-            const destinationCoordinates = await this.getCoordinates(this.destination.city);
+    if (!this.origin.city || !this.destination.city) {
+        alert("Please enter valid cities for origin and destination.");
+        return;
+    }
 
-            if (!originCoordinates || !destinationCoordinates) {
-                alert("Coordinates for the cities could not be found.");
-                return;
-            }
+    const originCoordinates = await this.getCoordinates(this.origin.city);
+    const destinationCoordinates = await this.getCoordinates(this.destination.city);
 
-            const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
-            const response = await fetch(url);
-            const data = await response.json();
-            const route = data.routes[0].geometry;
+    if (!originCoordinates || !destinationCoordinates) {
+        alert("Coordinates for the cities could not be found.");
+        return;
+    }
 
-            this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2);
-            const totalMinutes = Math.round(data.routes[0].duration / 60);
-            this.routeInfo.duration = { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
-            const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1000;
+    const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=polyline&access_token=${mapboxgl.accessToken}`;
+    const response = await fetch(directionsUrl);
+    const data = await response.json();
+    const route = data.routes[0].geometry;
 
-            this.routeInfo.recommendedPrice = this.numSeats > 0 ? (basePrice / this.numSeats).toFixed(2) : basePrice.toFixed(2);
+    this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2);
+    const totalMinutes = Math.round(data.routes[0].duration / 60);
+    this.routeInfo.duration = { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
+    const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1000;
 
-            if (this.routeLayer) {
-                this.map.removeLayer('route');
-                this.map.removeSource('route');
-            }
+    this.routeInfo.recommendedPrice = this.numSeats > 0 ? (basePrice / this.numSeats).toFixed(2) : basePrice.toFixed(2);
 
-            this.map.addSource('route', {
-                type: 'geojson',
-                data: { type: 'Feature', properties: {}, geometry: route },
-            });
+    // Использование Static API для получения снимка карты с маршрутом
+    const polyline = route; // Encoded polyline from Mapbox Directions API
+    const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s-a+9ed4bd(${originCoordinates[0]},${originCoordinates[1]}),pin-s-b+000(${destinationCoordinates[0]},${destinationCoordinates[1]}),path-5+f44-0.5(${encodeURIComponent(polyline)})/auto/800x600?access_token=${mapboxgl.accessToken}`;
 
-            this.map.addLayer({
-                id: 'route',
-                type: 'line',
-                source: 'route',
-                layout: { 'line-join': 'round', 'line-cap': 'round' },
-                paint: { 'line-color': '#3887be', 'line-width': 5, 'line-opacity': 0.75 },
-            });
+    try {
+        const mapResponse = await fetch(staticMapUrl);
+        if (!mapResponse.ok) {
+            throw new Error(`Error fetching map snapshot: ${mapResponse.status}`);
+        }
 
-            this.routeLayer = 'route';
+        const blob = await mapResponse.blob();
+        if (blob.size < 5000) {
+            throw new Error('Map snapshot is too small or corrupted.');
+        }
 
-            this.map.fitBounds([
-                [Math.min(originCoordinates[0], destinationCoordinates[0]), Math.min(originCoordinates[1], destinationCoordinates[1])],
-                [Math.max(originCoordinates[0], destinationCoordinates[0]), Math.max(originCoordinates[1], destinationCoordinates[1])]
-            ], { padding: 20 });
-        },
+        const downloadURL = await uploadFile(`mapSnapshots/${Date.now()}_map.png`, blob);
 
-        async saveTrip() {
-            if (this.isSaving) return;
-            this.isSaving = true;
+        // Сохранение URL снимка карты
+        this.mapSnapshot = downloadURL;
+        console.log('Map snapshot saved successfully:', downloadURL);
 
-            const tripData = {
-                origin: this.origin.city,
-                destination: this.destination.city,
-                numSeats: this.numSeats,
-                price: this.customPrice || this.routeInfo.recommendedPrice,
-                user_id: this.loggedUser.id,
-            };
+    } catch (error) {
+        console.error('Error while saving map snapshot:', error);
+    }
+}
 
-            try {
-                const originCoordinates = await this.getCoordinates(this.origin.city);
-                const destinationCoordinates = await this.getCoordinates(this.destination.city);
-                const imageUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-s-o+000(${originCoordinates[0]},${originCoordinates[1]}),pin-s-d+f00(${destinationCoordinates[0]},${destinationCoordinates[1]})/${originCoordinates[0]},${originCoordinates[1]},6,0/600x400?access_token=${mapboxgl.accessToken}`;
 
-                let response;
-                for (let attempt = 1; attempt <= 3; attempt++) {
-                    response = await fetch(imageUrl);
-                    if (response.headers.get("content-type") === "image/png") break;
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                }
+,
 
-                if (response.ok) {
-                    const blob = await response.blob();
+async saveTrip() {
+    if (this.isSaving) return;
+    this.isSaving = true;
 
-                    if (blob.size > 5000) {
-                        const downloadURL = await uploadFile(`mapSnapshots/${Date.now()}_map.png`, blob);
-                        tripData.mapSnapshot = downloadURL;
+    const tripData = {
+        origin: this.origin.city,
+        destination: this.destination.city,
+        numSeats: this.numSeats,
+        price: this.customPrice || this.routeInfo.recommendedPrice,
+        user_id: this.loggedUser.id,
+        mapSnapshot: this.mapSnapshot, // Ссылка на снимок карты
+    };
 
-                        const tripRef = await saveTrip(tripData);
-                        this.$router.push({ name: 'PublicarViaje', params: { tripId: tripRef.id } });
-                    } else {
-                        console.warn("Image is too small or corrupted.");
-                    }
-                } else {
-                    console.error("Could not retrieve a valid PNG image.");
-                }
-            } catch (error) {
-                console.error('Error saving trip:', error);
-                alert('Error saving trip.');
-            } finally {
-                this.isSaving = false;
-            }
-        },
+    try {
+        const tripRef = await saveTrip(tripData);
+        console.log('Trip saved successfully:', tripRef.id);
+        this.$router.push({ name: 'PublicarViaje', params: { tripId: tripRef.id } });
+    } catch (error) {
+        console.error('Error saving trip:', error);
+        alert('Error saving trip.');
+    } finally {
+        this.isSaving = false;
+    }
+},
 
         async getSuggestions(city, field) {
             if (!city) {
