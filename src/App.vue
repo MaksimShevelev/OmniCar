@@ -2,7 +2,7 @@
     <div class="flex flex-col h-screen">
 
         <!-- Header -->
-        <header class="top-0 left-0 right-0 bg-custom-green-dark p-8 text-white flex items-center justify-center relative rounded-b-lg shadow-lg z-20">
+        <header class="top-0 left-0 right-0 bg-custom-green-dark p-12 text-white flex items-center justify-center relative rounded-b-lg shadow-lg z-20">
                 <!-- Кнопка меню слева -->
                 <Popover class="absolute left-0 z-20 ml-4">
     <PopoverButton
