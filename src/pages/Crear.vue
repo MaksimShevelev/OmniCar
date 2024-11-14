@@ -82,7 +82,7 @@ const tiers = [
     features: [
       'Pasajeros verificados',
       'Ahorro en combustible y peajes',
-      'Creación de viajes для eventos',
+      'Creación de viajes a unos eventos',
       'Personalización del viaje',
       'Calculadora inteligente de costos de viaje',
     ],
