@@ -95,35 +95,22 @@ export function subscribeToComments(viajeId, callback) {
 }
 
 /**
- * Сохраняет поездку в базе данных с загрузкой карты в Firebase Storage.
- * @param {{origin: string, destination: string, numSeats: number, price: number, user_id: string}} tripData
- * @param {string} mapUrl - URL снимка карты, который нужно загрузить
+ * Сохраняет поездку в базе данных.
+ * @param {{origin: string, destination: string, numSeats: number, price: number, user_id: string, mapSnapshot: string}} tripData
  * @returns {Promise}
  */
-export async function saveTrip({ origin, destination, numSeats, price, user_id, mapUrl }) {
+export async function saveTrip({ origin, destination, numSeats, price, user_id, mapSnapshot }) {
     const viajesRef = collection(db, 'viajes');
-    const storage = getStorage();
 
     try {
-        // Один прямой запрос на URL и загрузка сразу в Firebase Storage
-        const storageRef = ref(storage, `mapSnapshots/${Date.now()}_map.png`);
-
-        // Используем fetch с `uploadBytes` без промежуточного blob
-        const response = await fetch(mapUrl);
-        const mapBlob = await response.blob();
-        await uploadBytes(storageRef, mapBlob);
-
-        // Получаем URL изображения после загрузки
-        const mapSnapshot = await getDownloadURL(storageRef);
-
-        // Сохраняем поездку с полученным URL карты
+        // Сохранение поездки в Firestore
         const tripRef = await addDoc(viajesRef, {
             origin,
             destination,
             numSeats,
             price,
             user_id,
-            mapSnapshot, // сохраняем ссылку
+            mapSnapshot, // Ссылка на карту передаётся из компонента
             created_at: serverTimestamp(),
         });
 
@@ -135,6 +122,7 @@ export async function saveTrip({ origin, destination, numSeats, price, user_id, 
         throw error;
     }
 }
+
 
 
 /**
