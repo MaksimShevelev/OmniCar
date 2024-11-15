@@ -1,5 +1,5 @@
 <template>
-    <div id="map-container" class="relative w-full mb-4">
+    <div id="map-container" class="relative w-full mb-4 shadow-2xl">
         <div id="map" class="h-[79vh] w-full rounded-lg"></div>
         <!-- Контейнер формы, размещённый поверх карты -->
         <div class="form-container absolute bottom-3 right-3 w-80 p-4 shadow-lg rounded-lg bg-white 
