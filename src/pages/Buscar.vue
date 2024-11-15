@@ -1,6 +1,6 @@
 <template>
     <div id="map-container" class="relative w-full mb-4 shadow-2xl">
-        <div id="map" class="h-[70vh] w-full rounded-lg"></div>
+        <div id="map" class="h-[75vh] w-full rounded-lg"></div>
         <!-- Контейнер формы, размещённый поверх карты -->
         <div class="form-container absolute bottom-3 right-3 w-80 p-4 shadow-lg rounded-lg bg-white 
             sm:right-2 sm:bottom-2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0">
