@@ -1,27 +1,27 @@
 <template>
     <div id="map-container" class="relative w-full mb-4 shadow-2xl">
-        <div id="map" class="h-[75vh] w-full rounded-lg"></div>
+        <div id="map" class="h-[65vh] w-full rounded-lg"></div>
         <!-- Контейнер формы, размещённый поверх карты -->
         <div class="form-container absolute bottom-3 right-3 w-80 p-4 shadow-lg rounded-lg bg-white 
-    sm:right-2 sm:bottom-2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0">
-    <div class="mb-4 suggestions-container">
-        <label class="block mb-2"><strong>Origen:</strong></label>
-        <input v-model="origin.city" @input="getSuggestionsDebounced(origin.city, 'origin')" class="p-2 border rounded mb-2 w-full"/>
-        <ul v-if="originSuggestions.length" class="suggestions-list">
-            <li v-for="(suggestion, index) in originSuggestions" :key="index" @click="origin.city = suggestion; originSuggestions = []" class="suggestion-item">{{ suggestion }}</li>
-        </ul>
-    </div>
-    <div class="mb-4 suggestions-container">
-        <label class="block mb-2"><strong>Destino:</strong></label>
-        <input v-model="destination.city" @input="getSuggestionsDebounced(destination.city, 'destination')"  class="p-2 border rounded w-full"/>
-        <ul v-if="destinationSuggestions.length" class="suggestions-list">
-            <li v-for="(suggestion, index) in destinationSuggestions" :key="index" @click="destination.city = suggestion; destinationSuggestions = []" class="suggestion-item">{{ suggestion }}</li>
-        </ul>
-    </div>
-    <button @click="getRoute" class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900 w-full">
-        Buscar
-    </button>
-</div>
+            sm:right-2 sm:bottom-2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0">
+            <div class="mb-4 suggestions-container">
+                <label class="block mb-2"><strong>Origen:</strong></label>
+                <input v-model="origin.city" @input="getSuggestionsDebounced(origin.city, 'origin')" class="p-2 border rounded mb-2 w-full"/>
+                <ul v-if="originSuggestions.length" class="suggestions-list">
+                    <li v-for="(suggestion, index) in originSuggestions" :key="index" @click="origin.city = suggestion; originSuggestions = []" class="suggestion-item">{{ suggestion }}</li>
+                </ul>
+            </div>
+            <div class="mb-4 suggestions-container">
+                <label class="block mb-2"><strong>Destino:</strong></label>
+                <input v-model="destination.city" @input="getSuggestionsDebounced(destination.city, 'destination')"  class="p-2 border rounded w-full"/>
+                <ul v-if="destinationSuggestions.length" class="suggestions-list">
+                    <li v-for="(suggestion, index) in destinationSuggestions" :key="index" @click="destination.city = suggestion; destinationSuggestions = []" class="suggestion-item">{{ suggestion }}</li>
+                </ul>
+            </div>
+            <button @click="getRoute" class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900 w-full">
+                Buscar
+            </button>
+        </div>
 
     </div>
 </template>
