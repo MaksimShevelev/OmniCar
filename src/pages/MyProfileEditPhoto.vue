@@ -1,5 +1,5 @@
 <template>
-    <BaseHeading1 class="text-center text-3xl text-gray-900 mt-4" >Cambiar foto de perfíl</BaseHeading1>
+    <BaseHeading1 class="text-3xl text-gray-900 mt-4" >Cambiar foto de perfil</BaseHeading1>
 
     <div class="sm:col-span-4">
       <h2 class="block text-sm font-medium text-gray-900">Previsualización de la foto elegida</h2>
@@ -33,7 +33,7 @@
             @submit.prevent="handleSubmit"
         >
             <div class="mb-4">
-                <label for="photoURL" class="block text-sm font-medium text-gray-900 mb-2">Nueva foto</label>
+                <label for="photoURL" class="block text-sm font-medium text-gray-900 mb-2"><strong class="text-gray-900 text-xl">Nueva foto</strong></label>
                 <input
                     type="file"
                     id="photoURL"
