@@ -17,7 +17,6 @@ import Crear from "../pages/Crear.vue";
 import CategoriaViaje from "../pages/CategoriaViaje.vue";
 import ConstruirRuta from "../pages/ConstruirRuta.vue";
 import PublicarViaje from "../pages/PublicarViaje.vue";
-import ChatsPrivadas from "../pages/Chat.vue";
 import ChatList from "../pages/ChatList.vue";
 import MisViajes from "../pages/MisViajes.vue";
 import StartPage from "../pages/Start.vue";
@@ -41,7 +40,6 @@ const routes = [
     { path: '/categoria-viaje', component: CategoriaViaje, meta: { requiresAuth: true } },
     { path: '/construir-ruta', component: ConstruirRuta, meta: { requiresAuth: true } },
     { path: '/mis-viajes', component: MisViajes, meta: { requiresAuth: true } },
-    { path: '/chatos', component: ChatsPrivadas, meta: { requiresAuth: true } },
     {
         path: '/publicar-viaje/:tripId?',
         name: 'PublicarViaje',  // Убедитесь, что имя маршрута задано корректно
