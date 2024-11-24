@@ -1,111 +1,423 @@
 <template>
-  <div class="mt-4 mb-40">
-    <div class="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl" aria-hidden="true">
-      <div class="mx-auto aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#239e61] to-[#1d7e4b] opacity-30" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-    </div>
-    <div class="mx-auto max-w-4xl text-center">
-      <h1 class="mt-4 text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-3xl">Crear viaje</h1>
-    </div>
-    
-    <!-- Grid layout для карточек -->
-    <div class="mx-auto mt-4 grid max-w-lg gap-8 sm:gap-10 lg:max-w-4xl lg:grid-cols-2">
-      <div
-        v-for="(tier, index) in tiers"
-        :key="tier.id"
-        @mouseover="hoveredIndex = index"
-        @mouseleave="hoveredIndex = null"
-        :class="[
-          'bg-white/60 shadow-2xl p-8 rounded-3xl ring-1 ring-gray-900/10 sm:p-10 mb-8 mt-8 transition-transform duration-300 transform group',
-          hoveredIndex !== null && hoveredIndex !== index ? 'scale-95 brightness-75' : 'scale-105 brightness-100'
-        ]"
-      >
-        <div class="relative sm:mb-4 mt-4">
-          <h2 :id="tier.id" class="text-green-700 text-base font-semibold">{{ tier.name }}</h2>
-          <img :src="tier.image" alt="Описание изображения" class="mt-4 w-full h-auto rounded-md">
-          
-          <ul class="mt-8 space-y-3 text-sm text-green-700 sm:mt-10">
-            <li v-for="feature in tier.features" :key="feature" class="flex gap-x-3">
-              <CheckIcon class="h-6 w-5 flex-none text-green-700" aria-hidden="true"></CheckIcon>
-              {{ feature }}
-            </li>
-          </ul>
 
-          <router-link
-            v-if="tier.featured"
-            to="/categoria-viaje"
-            aria-describedby="tier.id"
-            class="mt-8 block rounded-md bg-custom-green-dark px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-400 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Crear viaje
-          </router-link>
+    <div id="map-container" class="flex h-[75vh] w-full rounded-lg shadow-2xl">
+        <!-- Карта -->
+        <div id="map" class="flex-grow rounded-lg">
 
-          <a
-            v-else
-            :href="tier.href"
-            :aria-describedby="tier.id"
-            class="mt-8 block rounded-md bg-custom-green-dark px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-400 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Crear solicitud de viaje
-          </a>
+        <div class="form-container mb-4 absolute bottom-3 right-3 w-70 p-4 shadow-lg rounded-lg 
+            sm:right-2 sm:bottom-2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0  ">
+
+            <section class="w-full">
+                <div class="mb-4 suggestions-container">
+                    <label class="block mb-2"><strong>Origen:</strong></label>
+                    <input v-model="origin.city" @input="getSuggestionsDebounced(origin.city, 'origin')"
+                        class="p-2 border rounded mb-2 responsive-input" />
+                    <ul v-if="originSuggestions.length" class="suggestions-list">
+                        <li v-for="(suggestion, index) in originSuggestions" :key="index"
+                            @click="origin.city = suggestion; originSuggestions = []" class="suggestion-item">{{
+                                suggestion }}</li>
+                    </ul>
+                </div>
+
+                <div class="mb-4 suggestions-container">
+                    <label class="block mb-2"><strong>Destino:</strong></label>
+                    <input v-model="destination.city" @input="getSuggestionsDebounced(destination.city, 'destination')"
+                        class="p-2 border rounded responsive-input" />
+                    <ul v-if="destinationSuggestions.length" class="suggestions-list">
+                        <li v-for="(suggestion, index) in destinationSuggestions" :key="index"
+                            @click="destination.city = suggestion; destinationSuggestions = []" class="suggestion-item">
+                            {{ suggestion }}</li>
+                    </ul>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block mb-2"><strong>Cantidad de asientos:</strong></label>
+                    <div class="flex items-center space-x-2">
+                        <!-- Кнопка минус -->
+                        <button @click="decrementSeats"
+                            class="p-2 bg-gray-100 border rounded hover:bg-gray-300 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-dash-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8" />
+                            </svg>
+                        </button>
+
+                        <!-- Поле ввода -->
+                        <input type="number" v-model.number="numSeats" min="1" max="4"
+                            class=" p-1 border rounded w-12 text-center no-spinner"
+                            @input="numSeats = Math.max(1, Math.min(numSeats, 4))" />
+
+                        <!-- Кнопка плюс -->
+                        <button @click="incrementSeats"
+                            class="p-2 bg-gray-100 border rounded hover:bg-gray-300 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+
+                <button @click="getRoute"
+                    class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900 w-full">
+                    Crear ruta
+                </button>
+            </section>
+
+
+
+
         </div>
-      </div>
+ 
     </div>
-  </div>
+
+
+        
+    </div>
+    <div v-if="routeInfo.distance && (routeInfo.duration.hours || routeInfo.duration.minutes)" class="mx-auto mb-40 lg:w-1/3 p-4 border-t shadow-lg rounded-lg">
+
+
+<h2 class="my-4 text-2xl text-center text-green-700 font-semibold">Información sobre la ruta</h2>
+
+
+<p class="my-4 "><strong>Distancia:</strong> {{ routeInfo.distance }} km</p>
+<p class="my-4 "><strong>Tiempo de viaje:</strong> {{ routeInfo.duration.hours }}
+    hs {{ routeInfo.duration.minutes }} min</p>
+<p class="my-4 "><strong>Precio recomendado:</strong> {{
+    routeInfo.recommendedPrice }} $ ARS</p>
+<div class="mb-4">
+<label class="block mb-2"><strong>Precio $ ARS:</strong></label>
+<input
+type="number"
+v-model.number="customPrice"
+class="p-2 border rounded responsive-input"
+@input="customPrice = Math.max(1, customPrice)"
+/>
+</div>
+
+
+<button @click="saveTrip"
+    class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900 w-full">
+    Continuar
+</button>
+
+<!-- Show loader if saving -->
+
+</div>
+
+    <BaseLoader v-if="isSaving" />
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { CheckIcon } from '@heroicons/vue/20/solid'
 
-const hoveredIndex = ref(null) // индекс для отслеживания карточки под мышью
 
-const tiers = [
-  {
-    name: 'Para pasajeros',
-    id: 'tier-hobby',
-    href: '#',
-    image: '../public/12.jpg',
-    features: [
-      'Conductores verificados',
-      'Creación de solicitudes para eventos',
-      'Notificaciones de viajes disponibles',
-      'Cancelación gratuita de reserva',
-      'Viajes económicos y seguros',
-    ],
-    featured: false,
-  },
-  {
-    name: 'Para conductores',
-    id: 'tier-enterprise',
-    href: '#',
-    image: '../public/10.jpg',
-    features: [
-      'Pasajeros verificados',
-      'Ahorro en combustible y peajes',
-      'Creación de viajes a eventos',
-      'Personalización del viaje',
-      'Calculadora inteligente de costos de viaje',
-    ],
-    featured: true,
-  },
-]
+<script>
+import mapboxgl from 'mapbox-gl';
+import BaseHeading1 from '../components/BaseHeading1.vue';
+import BaseLoader from '../components/BaseLoader.vue';
+import { subscribeToAuthState } from '../services/auth.js';
+import { saveTrip } from '../services/viajes.js';
+import { uploadFile } from "../services/file-storage";
+import 'mapbox-gl/dist/mapbox-gl.css';
+import polyline from '@mapbox/polyline';
+
+let unsubscribeAuth = () => {};
+
+mapboxgl.accessToken = 'pk.eyJ1IjoibWF4aWFzZGRzYWRzZGYiLCJhIjoiY20ydGM4MGFzMDFrZDJrb2gyMGV5ajFnMCJ9.l0ZQB85L5nD3LWTRYM0hlA';
+
+export default {
+    name: 'ConstruirRuta',
+    components: { BaseHeading1, BaseLoader },
+    data() {
+        return {
+            loggedUser: {
+                id: null,
+                email: null,
+                displayName: null,
+                rol: null,
+            },
+            origin: { city: '' },
+            destination: { city: '' },
+            originSuggestions: [],
+            destinationSuggestions: [],
+            routeLayer: null,
+            numSeats: 1,
+            routeInfo: {
+                distance: null,
+                duration: { hours: 0, minutes: 0 },
+                recommendedPrice: null,
+            },
+            customPrice: '',
+            map: null,
+            isSaving: false, // Показать BaseLoader во время сохранения
+            getSuggestionsDebounced: null,
+        };
+    },
+    methods: {
+        async getCoordinates(city) {
+            const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(city)}.json?access_token=${mapboxgl.accessToken}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.features[0]?.geometry.coordinates;
+        },
+
+        async getRoute() {
+            if (!this.origin.city || !this.destination.city) {
+                alert("Please enter valid cities for origin and destination.");
+                return;
+            }
+
+            const originCoordinates = await this.getCoordinates(this.origin.city);
+            const destinationCoordinates = await this.getCoordinates(this.destination.city);
+
+            if (!originCoordinates || !destinationCoordinates) {
+                alert("Coordinates for the cities could not be found.");
+                return;
+            }
+
+            const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${originCoordinates[0]},${originCoordinates[1]};${destinationCoordinates[0]},${destinationCoordinates[1]}?geometries=polyline&access_token=${mapboxgl.accessToken}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (!data.routes || data.routes.length === 0) {
+                alert("No route found.");
+                return;
+            }
+
+            const route = data.routes[0].geometry;
+            const coordinates = polyline.decode(route);
+
+            const geojson = {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                    type: 'LineString',
+                    coordinates: coordinates.map(coord => [coord[1], coord[0]])
+                }
+            };
+
+            this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2);
+            const totalMinutes = Math.round(data.routes[0].duration / 60);
+            this.routeInfo.duration = { hours: Math.floor(totalMinutes / 60), minutes: totalMinutes % 60 };
+
+            const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1200;
+            this.routeInfo.recommendedPrice = this.numSeats > 0 ? (basePrice / this.numSeats).toFixed(2) : basePrice.toFixed(2);
+
+            if (this.routeLayer) {
+                this.map.removeLayer('route');
+                this.map.removeSource('route');
+            }
+
+            this.map.addSource('route', {
+                type: 'geojson',
+                data: geojson,
+            });
+
+            this.map.addLayer({
+                id: 'route',
+                type: 'line',
+                source: 'route',
+                layout: { 'line-join': 'round', 'line-cap': 'round' },
+                paint: { 'line-color': '#239e61', 'line-width': 5, 'line-opacity': 0.75 },
+            });
+
+            this.routeLayer = 'route';
+
+            const bounds = new mapboxgl.LngLatBounds();
+            coordinates.forEach(coord => bounds.extend([coord[1], coord[0]]));
+            this.map.fitBounds(bounds, { padding: 20 });
+
+            const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s-a+9ed4bd(${originCoordinates[0]},${originCoordinates[1]}),pin-s-b+000(${destinationCoordinates[0]},${destinationCoordinates[1]}),path-5+f44-0.5(${encodeURIComponent(route)})/auto/400x300?access_token=${mapboxgl.accessToken}`;
+
+            try {
+                const mapResponse = await fetch(staticMapUrl);
+                if (!mapResponse.ok) {
+                    throw new Error(`Error fetching map snapshot: ${mapResponse.status}`);
+                }
+
+                const blob = await mapResponse.blob();
+                if (blob.size < 5000) {
+                    throw new Error('Map snapshot is too small or corrupted.');
+                }
+
+                const downloadURL = await uploadFile(`mapSnapshots/${Date.now()}_map.png`, blob);
+                this.mapSnapshot = downloadURL;
+                console.log('Map snapshot saved successfully:', downloadURL);
+
+            } catch (error) {
+                console.error('Error while saving map snapshot:', error);
+            }
+        },
+
+        incrementSeats() {
+            this.numSeats = Math.min(this.numSeats + 1, 4);
+        },
+
+        decrementSeats() {
+            this.numSeats = Math.max(this.numSeats - 1, 1);
+        },
+
+        async saveTrip() {
+            if (this.isSaving) return;
+
+            this.isSaving = true; // Показываем BaseLoader
+
+            const tripData = {
+                origin: this.origin.city,
+                destination: this.destination.city,
+                numSeats: this.numSeats,
+                price: this.customPrice || this.routeInfo.recommendedPrice,
+                user_id: this.loggedUser.id,
+                mapSnapshot: this.mapSnapshot,
+            };
+
+            try {
+                const tripRef = await saveTrip(tripData);
+                console.log('Trip saved successfully:', tripRef.id);
+                this.$router.push({ name: 'PublicarViaje', params: { tripId: tripRef.id } });
+            } catch (error) {
+                console.error('Error saving trip:', error);
+                alert('Error saving trip.');
+            } finally {
+                this.isSaving = false; // Скрываем BaseLoader
+            }
+        },
+
+        async getSuggestions(city, field) {
+            if (!city) {
+                this[`${field}Suggestions`] = [];
+                return;
+            }
+
+            const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(city)}.json?access_token=${mapboxgl.accessToken}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            this[`${field}Suggestions`] = data.features.map(feature => feature.place_name);
+        },
+
+        debounce(func, delay) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        },
+    },
+    watch: {
+        numSeats(newVal) {
+            if (this.routeInfo.distance) {
+                const basePrice = (parseFloat(this.routeInfo.distance) / 100) * 7 * 1000;
+                this.routeInfo.recommendedPrice = newVal > 0 ? (basePrice / newVal).toFixed(2) : basePrice.toFixed(2);
+
+                if (!this.customPrice || this.customPrice === this.routeInfo.recommendedPrice) {
+                    this.customPrice = '';
+                }
+            }
+        }
+    },
+    async mounted() {
+        this.map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [-58.3816, -34.6037],
+            zoom: 6,
+        });
+
+        unsubscribeAuth = subscribeToAuthState(newUserData => this.loggedUser = newUserData);
+        this.getSuggestionsDebounced = this.debounce(this.getSuggestions, 300);
+    },
+    unmounted() {
+        unsubscribeAuth();
+    },
+};
 </script>
 
-<style scoped>
-.grid {
-  gap: 2rem;
+
+
+
+
+<style>
+.suggestions-list {
+    border: 1px solid #ccc;
+    background-color: white;
+    position: absolute;
+    z-index: 1000;
+    width: calc(100% - 16px);
 }
 
-@media (min-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 5rem;
-  }
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
 }
 
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: 1fr 1fr;
-  }
+.suggestion-item:hover {
+    background-color: #f0f0f0;
 }
+
+#map {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.67);
+    overflow: hidden;
+}
+
+.suggestions-container {
+    position: relative;
+}
+
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    border: 1px solid #ccc;
+    background-color: white;
+    z-index: 1000;
+    width: calc(100% - 16px);
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.form-container {
+    background-color: #ffffffce;
+    z-index: 9999;
+}
+
+/* Убирает стрелочки в большинстве браузеров */
+.no-spinner {
+    -moz-appearance: textfield;
+    /* Firefox */
+    -webkit-appearance: none;
+    /* Chrome, Safari, Edge */
+    appearance: none;
+    /* Современные браузеры */
+}
+
+/* Убирает стрелки для полей с типом number в Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.responsive-input {
+    width: 100%; /* Полная ширина по умолчанию */
+    max-width: 200px; /* Максимальная ширина */
+  }
+
+  @media (min-width: 640px) {
+    .responsive-input {
+      max-width: 300px; /* Увеличиваем ширину на больших экранах */
+    }
+  }
 </style>
