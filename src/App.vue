@@ -175,7 +175,7 @@
         </header>
 
         <!-- Main Content -->
-                            <main class="container lg:p-2 md:p-2 flex-1 mx-auto">
+                            <main main class="container lg:p-2 md:p-2 sm:p-1 flex-1 mx-auto">
                                 <router-view />
                             </main>
                             <footer class="fixed bottom-0 left-0 right-0 pt-4 pb-2 z-11 bg-custom-green-dark text-white flex justify-around items-center h-20 rounded-t-lg mt-4">
