@@ -1,55 +1,108 @@
 <template>
-    <BaseHeading1 class="flex flex-col justify-center text-3xl items-center text-center mt-4">Opciones del viaje</BaseHeading1>
-    <div class="flex flex-col justify-center items-center text-center mt-8"></div>
-    <div class="mb-40 p-4 border rounded flex">
-        <section class="w-1/2 p-2">
-            <form @submit.prevent="handleSubmit">
-                <div class="mb-4">
-                    <h3 class="block mb-2 text-xl text-green-700">Descripción del viaje</h3>
-                    <textarea id="text" class="w-full min-h-8 p-2 border rounded" v-model="newMessage.text"></textarea>
-                </div>
+    <BaseHeading1 class="flex flex-col justify-center text-3xl items-center text-center mt-4">Opciones del viaje
+    </BaseHeading1>
+    <div class="mb-40 p-4 flex flex-col">
+    <!-- Форма с секциями -->
+    <form @submit.prevent="handleSubmit" class="flex flex-col lg:flex-row w-full gap-10">
+        <!-- Левая секция -->
+        <section class="lg:w-1/2 p-4 lg:border-r">
+            <div class="mb-4">
+                <h3 class="block mb-2 text-xl text-green-700">Descripción del viaje</h3>
+                <textarea
+                    id="text"
+                    class="w-full min-h-8 p-2 border rounded"
+                    v-model="newMessage.text"
+                ></textarea>
+            </div>
 
-                <!-- Поле для выбора даты поездки -->
-                <div class="mb-4">
-                    <label for="tripDate" class="block mb-2">Fecha del viaje</label>
-                    <input type="date" id="tripDate" v-model="tripDate" :min="todayDate" class="w-full p-2 border rounded" required />
-                </div>
+            <div class="mb-4">
+                <label for="tripDate" class="block mb-2">Fecha del viaje</label>
+                <input
+                    type="date"
+                    id="tripDate"
+                    v-model="tripDate"
+                    :min="todayDate"
+                    class="w-60 p-2 border rounded"
+                    required
+                />
+            </div>
 
-                <!-- Поле для выбора времени поездки -->
-                <div class="mb-4">
-                    <label for="tripTime" class="block mb-2">Horario de salida</label>
-                    <input type="time" id="tripTime" v-model="tripTime" :min="isToday ? currentTime : null" class="w-full p-2 border rounded" required />
-                </div>
+            <div class="mb-4">
+                <label for="tripTime" class="block mb-2">Horario de salida</label>
+                <input
+                    type="time"
+                    id="tripTime"
+                    v-model="tripTime"
+                    :min="isToday ? currentTime : null"
+                    class="w-60 p-2 border rounded"
+                    required
+                />
+            </div>
 
-                <!-- Поле с radio для выбора типа поездки -->
-                <div class="mb-4">
-                    <h3 class="block mb-2 text-xl text-green-700">¿Que tipo de la reserva prefieres agregar?</h3>
-                    <label class="inline-flex items-center">
-                        <input type="radio" value="revisar" v-model="tripType" class="mr-2" /> Revisar cada solicitud
-                        <span class="ml-3" v-html="tripTypeIcons.revisar"></span>
-                    </label>
-                    <label class="inline-flex items-center ml-4">
-                        <input type="radio" value="automaticomente" v-model="tripType" class="mr-2 ml-3" /> Confirmación automática
-                        <span class="ml-3" v-html="tripTypeIcons.automaticomente"></span>
-                    </label>
-                </div>
-
-                <!-- Поле с checkbox для выбора опций -->
-                <div class="mb-4">
-                    <h3 class="block mb-2 text-xl text-green-700">Opciones</h3>
-                    <div v-for="option in availableOptions" :key="option" class="flex items-center">
-                        <input type="checkbox" :value="option" v-model="options" class="mr-2 mt-4 bg-green-700" />
-                        <span class="ml-3 mt-4" v-html="optionIcons[option]"></span>
-                        <span class="ml-3 mt-4">{{ option }}</span>
-                    </div>
-                </div>
-
-                <BaseLoader v-if="isUpdating" class="mt-4" />
-
-                <button type="submit" class="transition-all mt-4 py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900">Publicar</button>
-            </form>
+            <div class="mb-4">
+                <h3 class="block mb-2 text-xl text-green-700">¿Que tipo de la reserva prefieres agregar?</h3>
+                <label class="inline-flex items-center">
+                    <input
+                        type="radio"
+                        value="revisar"
+                        v-model="tripType"
+                        class="mr-2"
+                    />
+                    Revisar cada solicitud
+                    <span class="ml-3 " v-html="tripTypeIcons.revisar"></span>
+                </label>
+                <label class="inline-flex items-center lg:ml-4 ">
+                    <input
+                        type="radio"
+                        value="automaticomente"
+                        v-model="tripType"
+                        class="mr-2 lg:ml-3"
+                    />
+                    Confirmación automática
+                    <span class="ml-3 " v-html="tripTypeIcons.automaticomente"></span>
+                </label>
+            </div>
         </section>
+
+        <!-- Правая секция -->
+        <section class="lg:w-1/2 p-4">
+            <div class="mb-4">
+                <h3 class="block mb-2 text-xl text-green-700">Opciones</h3>
+                <div
+                    v-for="option in availableOptions"
+                    :key="option"
+                    class="flex items-center mb-4"
+                >
+                    <input
+                        type="checkbox"
+                        :value="option"
+                        v-model="options"
+                        class="mr-2 bg-green-700"
+                    />
+                    <span class="ml-3" v-html="optionIcons[option]"></span>
+                    <span class="ml-3">{{ option }}</span>
+                </div>
+            </div>
+        </section>
+    </form>
+
+    <!-- Кнопка под формой -->
+    <div class="flex justify-center border-t items-center pt-10 mt-10">
+        <button
+            type="button"
+            @click="handleSubmit"
+            class="transition-all w-80 py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
+        >
+            Publicar
+        </button>
     </div>
+
+    <BaseLoader v-if="isUpdating" class="mt-4" />
+</div>
+
+
+
+
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
         <div class="bg-white p-6 rounded shadow-lg text-center">
             <p class="text-lg font-semibold">¡Viaje publicado con éxito!</p>
@@ -58,6 +111,7 @@
             </button>
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -68,14 +122,14 @@ import BaseHeading1 from '../components/BaseHeading1.vue';
 import { subscribeToAuthState } from '../services/auth.js';
 import { saveChatMessage, subscribeToChatMessages, saveComment, subscribeToComments, updateTrip } from '../services/viajes.js';
 
-let unsubscribeAuth = () => {};
+let unsubscribeAuth = () => { };
 
 mapboxgl.accessToken = 'pk.eyJ1IjoibWF4aWFzZGRzYWRzZGYiLCJhIjoiY20ydGM4MGFzMDFrZDJrb2gyMGV5ajFnMCJ9.l0ZQB85L5nD3LWTRYM0hlA';
 
 export default {
     name: 'PublicarViaje',
     props: ['tripId'],
-    components: { BaseHeading1, BaseLoader  },
+    components: { BaseHeading1, BaseLoader },
     data() {
         return {
             messages: [],
@@ -96,7 +150,7 @@ export default {
             ],
             availableOptions: ['Se permite fumar', 'Se permite la comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho', 'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar'], // Доступные опции для checkbox
             optionIcons: {
-        'Se permite fumar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'Se permite fumar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_40_3365)"/>
 <defs>
 <pattern id="pattern0_40_3365" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -106,7 +160,7 @@ export default {
 </defs>
 </svg>
 `,
-        'Se permite la comida y bebida': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'Se permite la comida y bebida': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_40_3364)"/>
 <defs>
 <pattern id="pattern0_40_3364" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -116,7 +170,7 @@ export default {
 </defs>
 </svg>
 `,
-        'Se permiten mascotas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'Se permiten mascotas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_40_3368)"/>
 <defs>
 <pattern id="pattern0_40_3368" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -126,7 +180,7 @@ export default {
 </defs>
 </svg>
 `,
-'No me gusta hablar mucho': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'No me gusta hablar mucho': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_42_2183)"/>
 <defs>
 <pattern id="pattern0_42_2183" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -136,7 +190,7 @@ export default {
 </defs>
 </svg>
 `,
-'El baúl está vacío': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'El baúl está vacío': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_42_2182)"/>
 <defs>
 <pattern id="pattern0_42_2182" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -147,7 +201,7 @@ export default {
 </svg>
 
 `,
-'Viajo hasta el destino sin paradas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'Viajo hasta el destino sin paradas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_43_2189)"/>
 <defs>
 <pattern id="pattern0_43_2189" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -158,7 +212,7 @@ export default {
 </svg>
 
 `,
-'Hay puertos USB para cargar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                'Hay puertos USB para cargar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_44_2193)"/>
 <defs>
 <pattern id="pattern0_44_2193" patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -169,8 +223,8 @@ export default {
 </svg>
 
 `,
-      },
-      tripType: 'revisar', // значение по умолчанию
+            },
+            tripType: 'revisar', // значение по умолчанию
             tripTypeIcons: {
                 revisar: `<svg width="35" height="35" class="ml-3" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="35" height="35" fill="url(#pattern0_47_3305)"/>
@@ -181,14 +235,8 @@ export default {
 <image id="image0_47_3305" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJklEQVR4nO2ZW4hVZRTHf42j44WsMQ0nxCyTimIwKy+gSOFDOfSQYPaSgvpQEr0o6ouRWtDFQhE1BRF6iUSDhFC0wEy8pC8pKD4YmhXK5F0c1GZOLPhvWBzOPmd/+3KO4vzhg3P2Xt9a67ut77/Whl7cf3gCGMU9jmHATbWh3MN4Hiip2e+7Dk8DZ4FNOQ5kI9AJtFNHvJHQwaQDsYnpkdwM6oh+wHkZXpfDQFZLphPoT53xiYxfAwZnGMgA4KJkPqUBGAn8JwfezTCQeXrfrVDdEOyQE79nGMgRvf+RBuJ15+j4Cu9ty/2j9mCF9+2uf0cRDvYBtgO7gOFV5JqAQ7rwnouRaVGrhMeBK8B+6YrDNK26bcMgDAHuaKZOA09VkTUHHiI94gYZ4VVNlPnyAynwDnBbCi5UmfEiMQG4IR/+BsZkOQORoo8DV9QGPhWYqTZVz1oD9Hwl23ZnPUNGvAisAtqqyNjWehvYAJxwBziumcx6YFaNbdkGfJRlJZLiWWANcD2B83GtC/gGeIEGYBywt4JTJ0VZZiq02ow2q7Xp2VtajZMV+u+V7sIxVCy12xm/BHwBjE6hb7S27SWnr1s2LJcpBHZh/esMGsFbAAzMQfdA6ep0+i/mfUn20YGLVqFbe7qIjK9VZy7icD36b1szE4xi7HGzdCaGiuSN8bIV2d1ThWHXhIXFA07Zz8Cj1A+PADud/aO6n4LwsDhUpOTzGlyoKDQpkER+HJZvidC/bCVWpswg7fAeFDO4IZ3vAX0zJHElTXCiLHKz62SHPBTDNHNxF+ChlKF1hdOxpZbwAif8dcqt8GuC23xfyq26yel4vxrTjNjufm2PUMwKoCZ2w6eh/AfU33ydWC7QrMTFBP6qQRCrYXvAQLaltNEmSm86jpefuUXOgFH3tDgWMJC4PD8JOpyepT7djHKO75ywZYUfhIQ7V0hI0n4L0DscWAiMcM+2So9lj0/ag8/04ErZltqZYgtsDBhI0mDygGPaRo0iPCafSxoDkxXvy0uVS5zR6QmNvuxKn9WaybyUUOds16+8+GA+/1KLNvVz2d7pAJb7ZYKBGHVPgiGqF5QUrVKzi1fcDNe8hIQm3cRRFca3O8r9mxJuqR2u31gyYr1zZG5AP8uzP9Sh3KrfIbn3Emd3OTmgxUWjLq1S0ZjhVvQn5US5YJTLDq3QMIni0AHckq1zRaQOVha6LANXAyJZaFGwy9Wy7ANQIZio7yElpaOLc8pT+iqSldQ66/HNsV3h2GduSe+ESpgizhTpO6V6Wd3S0N1lYfXbgLNjq/iavon4C/T7mM8PhcLi/Bz3LdHP6Abt96je265PA/NFM86V9flTRb2GwkjlMtH/UmD7Q+dsEHcRmoE3axSye0T11yrMNqKgEYxBun8miEyOzKkq2YteUEf8D6V8uXcmN1bmAAAAAElFTkSuQmCC"/>
 </defs>
 </svg>`, // SVG иконка для типа "revisar"
-                automaticomente: `<svg width="35" height="35" class="ml-3" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="35" height="35" fill="url(#pattern0_47_3304)"/>
-<defs>
-<pattern id="pattern0_47_3304" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_47_3304" transform="scale(0.02)"/>
-</pattern>
-<image id="image0_47_3304" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACjklEQVR4nNWZTYhNYRjHf8MYDUryNRHFFDaSuncMZSMl5WPjYyWJpCzIgm4WlJK5oixlQxMrFlNEKdRVJB8bRureYUGUkeRjfAyjt/7q7XTOO6cR53l/deqc9/zv7Xm6/3vO8zwv/FtGA3eBoRzHALAKo6zNmcSfYzNGuaYAKwHNCmleAi0YpB34CXwDpgd0l5XIAYxyUgF2BzTzlewnYDIGaQXeKZHOgO60NKcwynYF+CigmQp8AQZlQ5PcVyIuoSwOSXMRoyxVgO+B8RmascBr6ZZhlG4FeCKg2SHNPYwyRW/oX8C8DE0T8ESJbMQoFQV4NaBZLc1zoBmDjAL6FOSagO66NHsxyjoF+ELFYhoLZbsPwESM11X7A5pz0lQxSrtKja/AtAzNDNVdP4DZGK+rzgY0R6U5j1FavbqqnKEZB/RL04HxuuphQLNbmlsY5oGC3BbQPM3ZIdYoiE4F0C+LZXEzZyKPKbiu+pvH6RKV8u6pt5wC6yoXwNwRfkeLfoVCm6uKAnA990g54tVdEyiIRk7fu/9HGouA7ypZVlIgtZyJ1FM+2+w97c5gnOMKtCvl3kHdewVMwjgNBVtKGQEN6N56jNOhQPvUEfo9Sy3HvMu8rfZp/a3GQcRoqznAR61vIALKKbZq8lrcHiKhmmKrXVpz5X4bkdBI2GqmhnVubQuRUE6xVY/WrhAR1YStturaTU1mERF1z1ZtXgu8k4goJ2x1Sdc3Ei/FqGy1SeefLe99DGcrt8X8Rud7iIySZ6sLOr8TGJ2a5ZiC7/U2/xcQIfVEM2V2qzmPrYa8DdAxREiXl4QbUC8mUupeIoeJlJKXRK92a4nZVoOBSXwUPLO+A0VO3Hbb7WEG2P+F31f8AqKLGR/iAAAAAElFTkSuQmCC"/>
-</defs>
+                automaticomente: `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-lightning" viewBox="0 0 16 16">
+  <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641zM6.374 1 4.168 8.5H7.5a.5.5 0 0 1 .478.647L6.78 13.04 11.478 7H8a.5.5 0 0 1-.474-.658L9.306 1z"/>
 </svg>` // SVG иконка для типа "automaticomente"
             },
         };
@@ -204,41 +252,41 @@ export default {
     },
     methods: {
         async handleSubmit() {
-    try {
-        this.isUpdating = true; // Show loader
+            try {
+                this.isUpdating = true; // Show loader
 
-        const selectedIcon = this.tripTypeIcons[this.tripType];
-        const additionalData = {
-            date: this.tripDate,
-            time: this.tripTime,
-            type: { name: this.tripType, icon: selectedIcon },
-            options: this.options.map(option => ({ name: option, icon: this.optionIcons[option] })),
-            description: this.newMessage.text
-        };
+                const selectedIcon = this.tripTypeIcons[this.tripType];
+                const additionalData = {
+                    date: this.tripDate,
+                    time: this.tripTime,
+                    type: { name: this.tripType, icon: selectedIcon },
+                    options: this.options.map(option => ({ name: option, icon: this.optionIcons[option] })),
+                    description: this.newMessage.text
+                };
 
-        if (!selectedIcon) {
-            console.error("Иконка для выбранного типа поездки отсутствует");
-            return;
+                if (!selectedIcon) {
+                    console.error("Иконка для выбранного типа поездки отсутствует");
+                    return;
+                }
+
+                await updateTrip(this.tripId, additionalData);
+
+                // Show modal on success
+                this.showModal = true;
+            } catch (error) {
+                console.error('Ошибка при обновлении поездки:', error);
+            } finally {
+                this.isUpdating = false; // Hide loader after completion
+            }
+        },
+        confirmModal() {
+            this.showModal = false;
+            this.$router.push('/viajes'); // Redirect after modal confirmation
         }
 
-        await updateTrip(this.tripId, additionalData);
-
-        // Show modal on success
-        this.showModal = true;
-    } catch (error) {
-        console.error('Ошибка при обновлении поездки:', error);
-    } finally {
-        this.isUpdating = false; // Hide loader after completion
-    }
-},
-confirmModal() {
-    this.showModal = false;
-    this.$router.push('/viajes'); // Redirect after modal confirmation
-}
 
 
-
-,
+        ,
         async handleCommentSubmit(messageId) {
             if (!this.newComment[messageId]?.trim()) {
                 console.error("El texto del comentario está vacío");
