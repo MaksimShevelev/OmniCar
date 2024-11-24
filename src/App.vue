@@ -2,7 +2,7 @@
     <div class="flex flex-col h-screen">
 
         <!-- Header -->
-        <header class="top-0 left-0 right-0 bg-custom-green-dark p-12 text-white flex items-center justify-center relative rounded-b-lg shadow-lg z-20">
+        <header class="top-0 left-0 right-0 bg-custom-green-dark p-8 text-white flex items-center justify-center relative rounded-b-lg shadow-lg z-20">
                 <!-- Кнопка меню слева -->
                 <Popover class="absolute left-0 z-20 ml-4">
     <PopoverButton
@@ -66,6 +66,15 @@
                                                     d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                                             </svg>
                                         </router-link>
+                                        <router-link
+                                        class="flex items-center justify-between px-4 py-2 text-gray-900 hover:bg-custom-green hover:text-white rounded-md border-b border-gray-300"
+                                        to="/mis-viajes">
+                                        <span>Mis viajes</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+  <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+</svg>
+
+                                    </router-link>
                                         <router-link
                                         class="flex items-center justify-between px-4 py-2 text-gray-900 hover:bg-custom-green hover:text-white rounded-md border-b border-gray-300"
                                         to="/home">
@@ -166,10 +175,10 @@
         </header>
 
         <!-- Main Content -->
-                            <main class="container p-4 flex-1 mx-auto">
+                            <main class="container p-2 flex-1 mx-auto">
                                 <router-view />
                             </main>
-                            <footer class="fixed bottom-0 left-0 right-0 pt-4 pb-2 bg-custom-green-dark text-white flex justify-around items-center h-20 rounded-t-lg mt-4">
+                            <footer class="fixed bottom-0 left-0 right-0 pt-4 pb-2 z-11 bg-custom-green-dark text-white flex justify-around items-center h-20 rounded-t-lg mt-4">
                         <router-link to="/buscar" class="footer-link text-center rounded-t-lg text-white hover:text-gray-900 hover:bg-green-400 pt-3 pb-3 pl-5 pr-5 flex flex-col items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
@@ -278,5 +287,6 @@ header .absolute.left-0 {
 header .absolute.right-0 {
   right: 0;
 }
+
 
 </style>
