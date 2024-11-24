@@ -64,7 +64,7 @@ const tiers = [
     name: 'Para pasajeros',
     id: 'tier-hobby',
     href: '#',
-    image: '../public/12.jpg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/omnicar-80e07.firebasestorage.app/o/12.jpg?alt=media&token=db1659ae-2967-44a3-af52-53abfd4d56de',
     features: [
       'Conductores verificados',
       'Creación de solicitudes para eventos',
@@ -78,7 +78,7 @@ const tiers = [
     name: 'Para conductores',
     id: 'tier-enterprise',
     href: '#',
-    image: '../public/10.jpg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/omnicar-80e07.firebasestorage.app/o/10.jpg?alt=media&token=e71d8570-b081-46b4-85e0-10fbaedbdc5b',
     features: [
       'Pasajeros verificados',
       'Ahorro en combustible y peajes',
