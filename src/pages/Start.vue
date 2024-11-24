@@ -1,7 +1,7 @@
 <template>
     <div
         class="h-screen w-full mb-4 flex items-center justify-center bg-cover bg-bottom bg-white bg-opacity-80 p-8 rounded shadow-lg"
-        style="background-image: url('/public/старт.jpg');"
+        style="background-image: url('../public/старт.jpg');"
     >
     <div class="text-center w-full sm:w-3/4 md:w-1/2 lg:w-1/3 bg-white bg-opacity-80 p-8 rounded shadow-lg">
 
