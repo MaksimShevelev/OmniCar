@@ -21,41 +21,39 @@
             v-if="!loadingUser"
         >
         <ul class="flex flex-col gap-4">
-            <li
-                v-for="message in messages"
-                :key="message.id"
-                :class="{
-                    'self-end bg-green-300 text-right': message.user_id === loggedUser.id,
-                    'self-start bg-gray-300 text-left': message.user_id !== loggedUser.id,
-                }"
-                class="p-4 rounded-lg relative max-w-[75%] z-10"
-            >
-                <!-- Сообщение -->
-                <div class="ml-1 mr-1 mb-1 text-sm z-20">{{ message.text }}</div>
-                <!-- Дата и время -->
-                <div 
-                    class="text-xs text-gray-600 absolute bottom-1 right-2 z-10" 
-                    v-if="message.user_id === loggedUser.id"
-                >
-                    {{ formatDate(message.created_at) || 'Enviando...' }}
-                </div>
-                <div 
-                    class="text-xs text-gray-600 absolute bottom-1 left-2 z-10"
-                    v-else
-                >
-                    {{ formatDate(message.created_at) || 'Enviando...' }}
-                </div>
+  <li
+    v-for="message in messages"
+    :key="message.id"
+    :class="{
+      'self-end bg-green-300 text-right': message.user_id === loggedUser.id,
+      'self-start bg-gray-300 text-left': message.user_id !== loggedUser.id,
+    }"
+    class="p-4 rounded-lg relative max-w-[75%] z-10"
+  >
+    <!-- Сообщение -->
+    <div class="ml-1 mr-1 mb-3 text-sm z-20">{{ message.text }}</div>
 
-                <!-- Уголки диалога -->
-                <div
-                    :class="{
-                        'absolute bottom-0 -right-3 border-t-[30px] border-l-[30px] border-l-green-300 border-t-transparent': message.user_id === loggedUser.id,
-                        'absolute bottom-0 -left-3 border-t-[30px] border-r-[30px] border-r-gray-300 border-t-transparent': message.user_id !== loggedUser.id,
-                    }"
-                    class="w-0 h-0 z-1"
-                ></div>
-            </li>
-        </ul>
+    <!-- Дата и время -->
+    <div
+      class="text-xs text-gray-600 mt-2"
+      :class="{
+        'text-right': message.user_id === loggedUser.id,
+        'text-left': message.user_id !== loggedUser.id,
+      }"
+    >
+      {{ formatDate(message.created_at) || 'Enviando...' }}
+    </div>
+
+    <!-- Уголки диалога -->
+    <div
+      :class="{
+        'absolute bottom-0 -right-3 border-t-[30px] border-l-[30px] border-l-green-300 border-t-transparent': message.user_id === loggedUser.id,
+        'absolute bottom-0 -left-3 border-t-[30px] border-r-[30px] border-r-gray-300 border-t-transparent': message.user_id !== loggedUser.id,
+      }"
+      class="w-0 h-0 z-1"
+    ></div>
+  </li>
+</ul>
 
 
 
