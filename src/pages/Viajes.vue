@@ -160,14 +160,14 @@
             <!-- Modal Content -->
             <div v-if="selectedTrip" class="w-full p-6">
               <h2 class="text-3xl font-bold">Viaje de {{ selectedTrip.displayName || 'Información de viaje' }}</h2>
-              <h3 class="inline-flex text-xl p-4 border rounded-xl shadow text-green-700">
+              <h3 class="inline-flex text-xl p-2 border rounded-xl shadow text-green-700">
                 <strong>Precio x asiento: <span class="text-gray-900"> {{ selectedTrip.price }} </span> $ ARS</strong> 
               
               </h3>
               <!-- Trip Details -->
               <div class="my-4 text-lg">
               
-              <h3 class="inline-flex text-xl p-4 border rounded-xl shadow text-green-700">
+              <h3 class="inline-flex text-xl p-2 mb-2 border rounded-xl shadow text-green-700">
               <strong>Cantidad de asientos: <span class="text-gray-900"> {{ selectedTrip.numSeats || 'Не указано' }} </span></strong>
               </h3>
                 <p><strong>Origen:</strong> {{ selectedTrip.origin || 'Не указан' }}</p>
@@ -223,12 +223,12 @@
 
               <!-- Confirm Button -->
               <div class="flex justify-center border-t items-center pt-2 mt-2">
-              <router-link
-                :to="`/usuario/${selectedTrip.user_id}`"
-                class="mt-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
-              >
-                Reservar
-              </router-link>
+                <button
+        @click="handleReserve"
+        class="mt-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
+      >
+        Reservar
+      </button>
             </div>
             </div>
 
@@ -259,6 +259,8 @@ import { getUserProfileById } from '../services/user-profile.js';
 import { ref } from 'vue';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon } from '@heroicons/vue/24/outline';
+import { updateTripSeats } from "../services/viajes"; // Импорт функции для обновления данных
+
 
 export default {
   name: 'Viajes',
@@ -315,6 +317,37 @@ export default {
       this.newComment[tripId] = '';
       this.fetchComments(tripId);
     },
+    async handleReserve() {
+  try {
+    console.log("Selected trip:", this.selectedTrip);
+
+    if (!this.selectedTrip || this.selectedTrip.numSeats <= 0) {
+      alert("No hay asientos disponibles");
+      return;
+    }
+
+    this.selectedTrip.numSeats -= 1;
+    console.log("Updated local numSeats:", this.selectedTrip.numSeats);
+
+    await updateTripSeats(this.selectedTrip.id, this.selectedTrip.numSeats);
+
+    alert("Reserva exitosa");
+
+    // Переход к странице пользователя
+    this.$router.push(`/usuario/${this.selectedTrip.user_id}`);
+  } catch (error) {
+    console.error("Error reservando el viaje:", error);
+    alert("Hubo un error al reservar el viaje. Inténtalo de nuevo.");
+  }
+}
+
+,
+  async loadTrips() {
+    // Реализуйте загрузку списка поездок
+    subscribeToTrips((fetchedTrips) => {
+      this.trips = fetchedTrips;
+    });
+  },
     fetchComments(tripId) {
       subscribeToComments(tripId, (comments) => {
         this.comments[tripId] = comments;
@@ -337,6 +370,7 @@ export default {
         this.fetchComments(trip.id);
     });
 },
+
 
   closeModal() {
     this.modalOpen = false;
