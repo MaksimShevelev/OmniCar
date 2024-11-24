@@ -1,5 +1,15 @@
-import { db } from "./firebase";
-import { collection, query, where, getDocs, addDoc, serverTimestamp, orderBy, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase"; 
+import { 
+    collection, 
+    query, 
+    where, 
+    getDocs, 
+    addDoc, 
+    serverTimestamp, 
+    orderBy, 
+    limit, 
+    onSnapshot 
+} from "firebase/firestore";
 import { getUserProfileById } from "./user-profile";
 
 const chatsCache = {};
@@ -109,9 +119,9 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
 }
 
 /**
- * Получает список приватных чатов текущего пользователя.
+ * Получает список приватных чатов текущего пользователя с временем последнего сообщения.
  * @param {string} userId - ID текущего пользователя.
- * @returns {Promise<Array<{ chatId: string, otherUserId: string }>>}
+ * @returns {Promise<Array<{ chatId: string, otherUserId: string, lastMessage: string, lastMessageTime: Date | null }>>}
  */
 export async function getUserPrivateChats(userId) {
     if (!userId) {
@@ -124,15 +134,36 @@ export async function getUserPrivateChats(userId) {
 
     const snapshot = await getDocs(q);
 
-    return snapshot.docs.map(doc => {
-        const users = Object.keys(doc.data().users);
-        const otherUserId = users.find(id => id !== userId);
+    // Обрабатываем каждый чат
+    const chats = await Promise.all(
+        snapshot.docs.map(async doc => {
+            const users = Object.keys(doc.data().users);
+            const otherUserId = users.find(id => id !== userId);
 
-        return { 
-            chatId: doc.id, 
-            otherUserId
-        };
-    });
+            // Получаем сообщения из этого чата
+            const messagesRef = collection(db, `private-chats/${doc.id}/messages`);
+            const messagesQuery = query(messagesRef, orderBy('created_at', 'desc'), limit(1));
+            const messagesSnapshot = await getDocs(messagesQuery);
+
+            let lastMessage = 'Нет сообщений';
+            let lastMessageTime = null;
+
+            if (!messagesSnapshot.empty) {
+                const lastMessageDoc = messagesSnapshot.docs[0];
+                lastMessage = lastMessageDoc.data().text || 'Нет текста';
+                lastMessageTime = lastMessageDoc.data().created_at?.toDate() || null;
+            }
+
+            return { 
+                chatId: doc.id, 
+                otherUserId,
+                lastMessage,
+                lastMessageTime,
+            };
+        })
+    );
+
+    return chats;
 }
 
 /**
