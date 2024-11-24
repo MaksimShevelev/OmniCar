@@ -24,6 +24,7 @@ import StartPage from "../pages/Start.vue";
 
 const routes = [
     { path: '/home', component: Home },
+    { path: '/start', component: StartPage, alias: '/' },
     { path: '/registro', component: Register },
     { path: '/iniciar-sesion', component: Login },
     { path: '/viajes', component: Viajes, meta: { requiresAuth: true } },
@@ -41,7 +42,6 @@ const routes = [
     { path: '/construir-ruta', component: ConstruirRuta, meta: { requiresAuth: true } },
     { path: '/mis-viajes', component: MisViajes, meta: { requiresAuth: true } },
     { path: '/chatos', component: ChatsPrivadas, meta: { requiresAuth: true } },
-    { path: '/start', component: StartPage, alias: '/' },
     {
         path: '/publicar-viaje/:tripId?',
         name: 'PublicarViaje',  // Убедитесь, что имя маршрута задано корректно
@@ -74,10 +74,15 @@ let loggedUser = {
 subscribeToAuthState(newUserData => (loggedUser = newUserData));
 
 router.beforeEach((to, from) => {
-    if (to.meta.requiresAuth && loggedUser.id == null) {
-        return {
-            path: '/iniciar-sesion',
-        };
+    // Если пользователь авторизован, перенаправляем на /home при запуске
+    if (loggedUser.id) {
+        if (to.path === '/' || to.path === '/start') {
+            return { path: '/home' };
+        }
+    }
+    // Если пользователь не авторизован, отправляем на /start
+    if (!loggedUser.id && to.meta.requiresAuth) {
+        return { path: '/start' };
     }
 });
 
