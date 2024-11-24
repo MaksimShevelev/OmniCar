@@ -6,35 +6,37 @@
         </div>
   <BaseHeading1 class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4">Lista de viajes
   </BaseHeading1>
-  <div class="flex bg-gray-100 rounded-xl gap-4 mb-40">
+  <div class="flex gap-4 mb-40">
 
     <section class="w-full">
-      <div class="p-4 border rounded">
+      <div class="p-4">
         <BaseLoader v-if="loadingTrips" />
 
         <ul class="flex flex-col gap-4">
           <li v-for="trip in sortedTrips" :key="trip.id">
             <div class="bg-white p-4 border rounded-xl shadow-md">
-              <div class="flex items-center justify-between text-xl">
-                <div class="mb-1 flex items-center space-x-4">
-                  <img
-                    :src="trip.photoURL || 'path/to/default-photo.jpg'" 
-                    alt="Фото профиля"
-                    class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
-                  />
-                  <div>
-                    <h1 class="inline-flex items-center text-3xl space-x-2">
-                      <b>{{ trip.displayName || 'Имя отсутствует' }}</b>
-                    </h1>
-                  </div>
-                </div>
-                <div class="mb-1 flex items-center space-x-2">
-                  <span class="inline-block bg-gray-200 text-3xl my-4 p-4 border rounded-xl shadow text-gray-700 font-semibold">
-                    {{ trip.price }} $ ARS
-                  </span>
-                </div>
-            
-              </div>
+              <div class="flex flex-col lg:flex-row items-center justify-between text-xl">
+    <!-- Первая секция -->
+    <div class="mb-4 flex items-center space-x-4">
+        <img
+            :src="trip.photoURL || 'path/to/default-photo.jpg'"
+            alt="Фото профиля"
+            class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
+        />
+        <div>
+            <h1 class="inline-flex items-center text-3xl space-x-2">
+                <b>{{ trip.displayName || 'Имя отсутствует' }}</b>
+            </h1>
+        </div>
+    </div>
+    <!-- Вторая секция -->
+    <div class="mb-4 flex items-center space-x-2">
+        <span class="inline-block bg-gray-200 text-3xl my-4 p-4 border rounded-xl shadow text-gray-700 font-semibold">
+            {{ trip.price }} $ ARS
+        </span>
+    </div>
+</div>
+
 
               <div class="text-2xl text-green-700">
                 <h2 class="inline-flex items-center text-2xl text-green-700 my-4 px-4 py-2 border rounded-xl shadow">
@@ -54,7 +56,9 @@
 
                   </span>
                   <!-- Текст для Origen -->
-                  <strong class="text-gray-900">Origen -  <span class="text-green-700"> {{ trip.origin || 'Не указан' }} </span></strong>
+                  <strong class="text-gray-900 hidden sm:inline">Origen - </strong>
+<span class="text-green-700">{{ trip.origin || 'Не указан' }}</span>
+
                 </h2>
               </div>
 
@@ -77,7 +81,7 @@
 
                   </span>
                   <!-- Текст для Destino -->
-                  <strong class="text-gray-900">Destino - <span class="text-green-700">   {{ trip.destination || 'Не указано' }} </span></strong>
+                  <strong class="text-gray-900 hidden sm:inline">Destino - </strong><span class="text-green-700">   {{ trip.destination || 'Не указано' }} </span>
                 </h2>
 
                 <div class="flex items-center gap-2 mt-2 mb-4">
@@ -156,14 +160,14 @@
             <!-- Modal Content -->
             <div v-if="selectedTrip" class="w-full p-6">
               <h2 class="text-3xl font-bold">Viaje de {{ selectedTrip.displayName || 'Información de viaje' }}</h2>
-              <h3 class="inline-flex text-xl my-2 p-4 border rounded-xl shadow text-green-700">
+              <h3 class="inline-flex text-xl p-4 border rounded-xl shadow text-green-700">
                 <strong>Precio x asiento: <span class="text-gray-900"> {{ selectedTrip.price }} </span> $ ARS</strong> 
               
               </h3>
               <!-- Trip Details -->
               <div class="my-4 text-lg">
               
-              <h3 class="inline-flex text-xl my-2 p-4 border rounded-xl shadow text-green-700">
+              <h3 class="inline-flex text-xl p-4 border rounded-xl shadow text-green-700">
               <strong>Cantidad de asientos: <span class="text-gray-900"> {{ selectedTrip.numSeats || 'Не указано' }} </span></strong>
               </h3>
                 <p><strong>Origen:</strong> {{ selectedTrip.origin || 'Не указан' }}</p>
@@ -218,12 +222,14 @@
               
 
               <!-- Confirm Button -->
+              <div class="flex justify-center border-t items-center pt-2 mt-2">
               <router-link
                 :to="`/usuario/${selectedTrip.user_id}`"
                 class="mt-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
               >
                 Reservar
               </router-link>
+            </div>
             </div>
 
           </DialogPanel>
