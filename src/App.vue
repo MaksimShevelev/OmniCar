@@ -289,7 +289,7 @@ header .absolute.right-0 {
 }
 
 footer{
-    z-index: 9999;
+    z-index: 9990;
 }
 
 
