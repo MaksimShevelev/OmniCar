@@ -288,5 +288,9 @@ header .absolute.right-0 {
   right: 0;
 }
 
+footer{
+    z-index: 9999;
+}
+
 
 </style>
