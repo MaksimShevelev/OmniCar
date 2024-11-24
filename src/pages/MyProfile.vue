@@ -3,7 +3,7 @@
     <!-- Заголовок и ссылки для редактирования -->
     <div class="flex items-end gap-4 mt-4">
       <BaseHeading1 class="text-center text-3xl text-gray-900">Mi perfil</BaseHeading1>
-      <router-link to="/mi-perfil/editar" class="mb-6 text-gray-900 underline focus:text-green-700 hover:text-green-700  active:text-green-700 ">
+      <router-link to="/mi-perfil/editar" class="mb-6 text-gray-900 underline focus:text-green-700 hover:text-green-700 active:text-green-700 ">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
           <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
           <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
@@ -18,7 +18,8 @@
     </div>
 
     <!-- Информация профиля и автомобиля -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" style="
+    margin-top: 2px">
       <!-- Информация о пользователе -->
       <section>
         <h2 class="inline-block bg-gray-100 text-xl p-2 border rounded-xl shadow text-gray-700 font-semibold">Información sobre ti</h2>
@@ -38,30 +39,30 @@
             <p class="text-gray-700">{{ loggedUser.rol || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Sobre mí</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Sobre mí</strong></label>
             <p class="text-gray-700">{{ loggedUser.bio || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Email</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Email</strong></label>
             <p class="text-gray-700">{{ loggedUser.email || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Número de teléfono</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Número de teléfono</strong></label>
             <p class="text-gray-700">{{ loggedUser.telefono || 'Sin especificar' }}</p>
           </div>
           <div>
-            <h3>Documentos</h3>
-            <label for="photo" class="block text-sm/6 font-medium text-gray-900">Foto de DNI</label>
+            <h2 class="inline-block bg-gray-100 text-xl p-2 border rounded-xl shadow text-gray-700 mb-2 font-semibold">Documentos</h2>
+            <label for="photo" class="block text-sm/6 font-medium text-gray-900"><strong class="text-gray-900 text-xl">Foto de DNI</strong></label>
             <div class="mt-2 flex items-center gap-x-3">
               <UserCircleIcon class="h-12 w-12 text-gray-300" aria-hidden="true" />
             </div>
-            <label for="photo" class="block text-sm/6 font-medium text-gray-900">Foto de licencia</label>
+            <label for="photo" class="block text-sm/6 font-medium text-gray-900"><strong class="text-gray-900 text-xl">Foto de licencia</strong></label>
             <div class="mt-2 flex items-center gap-x-3">
               <UserCircleIcon class="h-12 w-12 text-gray-300" aria-hidden="true" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Métodos de pago</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Métodos de pago</strong></label>
             <p class="text-gray-700">{{ loggedUser.postalCode || 'Sin especificar' }}</p>
           </div>
         </div>
@@ -72,33 +73,33 @@
         <h2 class="inline-block bg-gray-100 text-xl p-2 border rounded-xl shadow text-gray-700 font-semibold">Información sobre tu auto</h2>
         <div class="mt-6 space-y-4">
           <div>
-            <label for="photo" class="block text-sm font-medium text-gray-900">Foto</label>
+            <label for="photo" class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Foto</strong></label>
             <div class="mt-2 flex items-center gap-x-3">
               <UserCircleIcon class="h-12 w-12 text-gray-300" aria-hidden="true" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Marca</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Marca</strong></label>
             <p class="text-gray-700">{{ loggedUser.firstName || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Modelo</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Modelo</strong></label>
             <p class="text-gray-700">{{ loggedUser.lastName || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Año</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Año</strong></label>
             <p class="text-gray-700">{{ loggedUser.country || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Color</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Color</strong></label>
             <p class="text-gray-700">{{ loggedUser.streetAddress || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Tipo de combustible</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Tipo de combustible</strong></label>
             <p class="text-gray-700">{{ loggedUser.city || 'Sin especificar' }}</p>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-900">Consumo promedio</label>
+            <label class="block text-sm font-medium text-gray-900"><strong class="text-gray-900 text-xl">Consumo promedio</strong></label>
             <p class="text-gray-700">{{ loggedUser.region || 'Sin especificar' }}</p>
           </div>
         </div>
