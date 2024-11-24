@@ -2,6 +2,7 @@ import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp, u
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from './firebase';
 
+
 /**
  * Сохраняет сообщение чата.
  * @param {{user_id: string, email: string, text: string, displayName: string, rol: string, price: number}} message
@@ -208,4 +209,25 @@ async function loadUserProfile(userId) {
         console.log('Нет такого пользователя:', userId);
         return null;
     }
+}
+
+
+/**
+ * Загружает профиль пользователя по его user_id.
+ */
+
+export async function updateTripSeats(tripId, numSeats) {
+    if (!tripId) throw new Error("Trip ID is required");
+
+    const tripRef = doc(db, "viajes", tripId); // Изменено с "trips" на "viajes"
+
+    // Проверяем, существует ли документ
+    const tripSnap = await getDoc(tripRef);
+    if (!tripSnap.exists()) {
+        throw new Error(`Document with ID ${tripId} does not exist`);
+    }
+
+    // Обновляем поле numSeats
+    await updateDoc(tripRef, { numSeats });
+    console.log(`Updated trip ${tripId} with ${numSeats} seats`);
 }
