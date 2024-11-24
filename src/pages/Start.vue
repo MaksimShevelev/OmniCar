@@ -1,7 +1,7 @@
 <template>
     <div
         class="h-screen w-full mb-4 flex items-center justify-center bg-cover bg-bottom bg-white bg-opacity-80 p-8 rounded shadow-lg"
-        style="background-image: url('../public/старт.jpg');"
+        style="background-image: url('https://firebasestorage.googleapis.com/v0/b/omnicar-80e07.firebasestorage.app/o/%D1%81%D1%82%D0%B0%D1%80%D1%82.jpg?alt=media&token=efd0af61-bf67-4f6f-a657-e82b0b11a916');"
     >
     <div class="text-center w-full sm:w-3/4 md:w-1/2 lg:w-1/3 bg-white bg-opacity-80 p-8 rounded shadow-lg">
 
