@@ -15,7 +15,7 @@ import { getUserProfileById } from "./user-profile";
 const chatsCache = {};
 
 /**
- * Генерирует уникальный ключ для кэширования чатов.
+ * 
  * @param {string} senderId 
  * @param {string} receiverId 
  * @returns {string}
@@ -25,7 +25,7 @@ function getCacheKey(senderId, receiverId) {
 }
 
 /**
- * Добавляет чат в кэш.
+ * 
  * @param {string} key 
  * @param {any} value 
  */
@@ -34,14 +34,14 @@ function cacheAdd(key, value) {
 }
 
 /**
- * Получает документ чата между двумя пользователями.
+ * 
  * @param {string} senderId 
  * @param {string} receiverId 
  * @returns {Promise<DocumentReference>}
  */
 async function getPrivateChatDocument(senderId, receiverId) {
     if (!senderId || !receiverId) {
-        console.error("getPrivateChatDocument: неверные данные");
+        console.error("getPrivateChatDocument: No especificado");
         return null;
     }
 
@@ -75,7 +75,7 @@ async function getPrivateChatDocument(senderId, receiverId) {
 }
 
 /**
- * Сохраняет сообщение в приватном чате.
+ * 
  * @param {string} senderId 
  * @param {string} receiverId 
  * @param {string} text 
@@ -93,7 +93,7 @@ export async function savePrivateChatMessage(senderId, receiverId, text) {
 }
 
 /**
- * Подписка на сообщения в приватном чате.
+ * 
  * @param {string} senderId 
  * @param {string} receiverId 
  * @param {Function} callback 
@@ -119,13 +119,13 @@ export async function subscribeToPrivateChatMessages(senderId, receiverId, callb
 }
 
 /**
- * Получает список приватных чатов текущего пользователя с временем последнего сообщения.
- * @param {string} userId - ID текущего пользователя.
+ * 
+ * @param {string} userId 
  * @returns {Promise<Array<{ chatId: string, otherUserId: string, lastMessage: string, lastMessageTime: Date | null }>>}
  */
 export async function getUserPrivateChats(userId) {
     if (!userId) {
-        console.error("getUserPrivateChats: отсутствует ID пользователя");
+        console.error("getUserPrivateChats: ID de usuario faltante");
         return [];
     }
 
@@ -134,23 +134,22 @@ export async function getUserPrivateChats(userId) {
 
     const snapshot = await getDocs(q);
 
-    // Обрабатываем каждый чат
+    
     const chats = await Promise.all(
         snapshot.docs.map(async doc => {
             const users = Object.keys(doc.data().users);
             const otherUserId = users.find(id => id !== userId);
 
-            // Получаем сообщения из этого чата
             const messagesRef = collection(db, `private-chats/${doc.id}/messages`);
             const messagesQuery = query(messagesRef, orderBy('created_at', 'desc'), limit(1));
             const messagesSnapshot = await getDocs(messagesQuery);
 
-            let lastMessage = 'Нет сообщений';
+            let lastMessage = 'Sin mensajes';
             let lastMessageTime = null;
 
             if (!messagesSnapshot.empty) {
                 const lastMessageDoc = messagesSnapshot.docs[0];
-                lastMessage = lastMessageDoc.data().text || 'Нет текста';
+                lastMessage = lastMessageDoc.data().text || 'Sin texto';
                 lastMessageTime = lastMessageDoc.data().created_at?.toDate() || null;
             }
 
@@ -167,8 +166,8 @@ export async function getUserPrivateChats(userId) {
 }
 
 /**
- * Получает профили пользователей по их ID.
- * @param {Array<string>} userIds - массив ID пользователей.
+ * 
+ * @param {Array<string>} userIds 
  * @returns {Promise<Array<{ id: string, email: string, displayName: string }>>}
  */
 export async function getUsersProfiles(userIds) {
