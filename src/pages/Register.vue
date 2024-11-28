@@ -1,15 +1,13 @@
 <template>
     <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 mb-20">
-        <!-- Фон с блюром и градиентом -->
         <div class="absolute inset-0 -z-10 transform-gpu blur-3xl opacity-20" aria-hidden="true">
             <div class="aspect-[1097/845] w-full h-full bg-gradient-to-tr from-[#239e61] to-[#1d7e4b]"
                 style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
             ></div>
         </div>
 
-        <!-- Основной контент -->
         <div class="sm:mx-auto sm:w-full sm:max-w-sm relative z-10">
-            <img class="mx-auto h-20 w-auto" src="/public/logo.png" alt="Your Company" />
+            <img class="mx-auto h-20 w-auto" src="/public/logo.png" alt="Logo de OmniCar" />
             <BaseHeading1 class="text-center text-3xl/9 font-bold tracking-tight text-gray-900">Crear una cuenta</BaseHeading1>
         </div>
 
@@ -96,7 +94,6 @@ export default {
                 this.$router.push('/');
             } catch (error) {
                 console.error("[Register.vue] Error al registrar: ", error);
-                // TODO: Manejar el error...
             }
             this.loading = false;
         }
