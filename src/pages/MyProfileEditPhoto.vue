@@ -26,7 +26,6 @@
 
     <div class="flex gap-8 items-start mt-8  mb-40 max-w-[60%]">
         
-        <!-- Форма загрузки фото -->
         <form 
             class="w-full max-w-[60%]"
             action="#"
@@ -49,8 +48,6 @@
                 {{ !editing ? 'Actualizar' : 'Actualizando...' }}
             </button>
         </form>
-
-        <!-- Превью фото -->
 
     </div>
 </template>
@@ -92,7 +89,6 @@ export default {
                 text: '¡Tu foto de perfil fue actualizada con éxito!',
                 type: 'success',
             };
-            // Переход на страницу профиля после успешного обновления
             this.$router.push('/mi-perfil');
         } catch (error) {
             this.feedback = {
