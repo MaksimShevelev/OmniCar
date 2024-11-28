@@ -4,11 +4,10 @@ import { db } from './firebase';
 
 
 /**
- * Сохраняет сообщение чата.
- * @param {{user_id: string, email: string, text: string, displayName: string, rol: string, price: number}} message
+ * @param {{user_id: string, email: string, text: string, displayName: string, rol: string, price: number}} viaje
  * @returns {Promise}
  */
-export function saveChatMessage({ user_id, email, text, displayName, rol, price }) {
+export function saveViajes({ user_id, email, text, displayName, rol, price }) {
     const viajesRef = collection(db, 'viajes');
 
     return addDoc(viajesRef, {
@@ -23,15 +22,14 @@ export function saveChatMessage({ user_id, email, text, displayName, rol, price 
 }
 
 /**
- * Подписка на сообщения чата.
  * @param {function} callback
  */
-export function subscribeToChatMessages(callback) {
+export function subscribeToViajes(callback) {
     const viajesRef = collection(db, 'viajes');
     const q = query(viajesRef, orderBy('created_at'));
 
     onSnapshot(q, snapshot => {
-        const messages = snapshot.docs.map(doc => ({
+        const viajes = snapshot.docs.map(doc => ({
             id: doc.id,
             user_id: doc.data().user_id,
             email: doc.data().email,
@@ -46,16 +44,15 @@ export function subscribeToChatMessages(callback) {
             options: doc.data().options,
             origin: doc.data().origin,
             time: doc.data().time,
-            type: doc.data().type, // тип с иконкой
+            type: doc.data().type, 
             description: doc.data().description,
-            mapSnapshot: doc.data().mapSnapshot || null, // Ensure mapSnapshot is included
+            mapSnapshot: doc.data().mapSnapshot || null, 
         }));
-        callback(messages);
+        callback(viajes);
     });
 }
 
 /**
- * Сохраняет комментарий к поездке.
  * @param {{viajeId: string, user_id: string, text: string, displayName: string, rol: string}} commentData
  * @returns {Promise}
  */
@@ -72,9 +69,8 @@ export function saveComment({ viajeId, user_id, text, displayName, rol }) {
 }
 
 /**
- * Подписка на комментарии к поездке.
- * @param {string} viajeId - ID поездки
- * @param {function} callback - функция обратного вызова для получения комментариев
+ * @param {string} viajeId
+ * @param {function} callback
  */
 export function subscribeToComments(viajeId, callback) {
     const commentsRef = collection(db, 'comments');
@@ -96,7 +92,6 @@ export function subscribeToComments(viajeId, callback) {
 }
 
 /**
- * Сохраняет поездку в базе данных.
  * @param {{origin: string, destination: string, numSeats: number, price: number, user_id: string, mapSnapshot: string}} tripData
  * @returns {Promise}
  */
@@ -104,22 +99,21 @@ export async function saveTrip({ origin, destination, numSeats, price, user_id, 
     const viajesRef = collection(db, 'viajes');
 
     try {
-        // Сохранение поездки в Firestore
         const tripRef = await addDoc(viajesRef, {
             origin,
             destination,
             numSeats,
             price,
             user_id,
-            mapSnapshot, // Ссылка на карту передаётся из компонента
+            mapSnapshot, 
             created_at: serverTimestamp(),
         });
 
-        console.log('Поездка успешно сохранена:', tripRef.id);
+        console.log('Viaje guardado exitosamente:', tripRef.id);
         return tripRef;
 
     } catch (error) {
-        console.error('Ошибка при сохранении поездки:', error);
+        console.error('Error al guardar el viaje:', error);
         throw error;
     }
 }
@@ -127,8 +121,7 @@ export async function saveTrip({ origin, destination, numSeats, price, user_id, 
 
 
 /**
- * Обновляет поездку дополнительными данными.
- * @param {string} tripId - ID поездки для обновления
+ * @param {string} tripId 
  * @param {{date: string, time: string, type: {name: string, icon: string}, options: { name: string, icon: string }[], description: string}} additionalData
  * @returns {Promise}
  */
@@ -137,9 +130,9 @@ export function updateTrip(tripId, additionalData) {
     return updateDoc(tripRef, {
         date: additionalData.date,
         time: additionalData.time,
-        type: additionalData.type, // включает icon и name
-        options: additionalData.options, // массив объектов с полями name и icon
-        description: additionalData.description || 'Описание отсутствует' // добавляем описание или значение по умолчанию
+        type: additionalData.type, 
+        options: additionalData.options, 
+        description: additionalData.description || 'Sin descripción' 
     });
 }
 
@@ -147,8 +140,7 @@ export function updateTrip(tripId, additionalData) {
 
 
 /**
- * Подписка на обновления поездок с загрузкой данных профиля пользователя.
- * @param {function} callback - функция обратного вызова для получения списка поездок
+ * @param {function} callback 
  */
 export function subscribeToTrips(callback) {
     const viajesRef = collection(db, 'viajes');
@@ -170,7 +162,7 @@ export function subscribeToTrips(callback) {
           time: tripData.time || null,
           type: tripData.type || null,
           options: tripData.options || [],
-          description: tripData.description || 'Описание отсутствует', // включено описание
+          description: tripData.description || 'Sin descripción', 
           created_at: tripData.created_at,
           mapSnapshot: tripData.mapSnapshot || null,
           displayName: userProfile?.displayName,
@@ -189,8 +181,7 @@ export function subscribeToTrips(callback) {
 
 
 /**
- * Загружает профиль пользователя по его user_id.
- * @param {string} userId - ID пользователя
+ * @param {string} userId 
  * @returns {Promise<{ displayName: string, email: string, rol: string, photoURL: string } | null>}
  */
 async function loadUserProfile(userId) {
@@ -200,34 +191,29 @@ async function loadUserProfile(userId) {
     if (docSnap.exists()) {
         const data = docSnap.data();
         return {
-            displayName: data.displayName || 'Имя отсутствует',
-            email: data.email || 'Неизвестный пользователь',
-            rol: data.rol || 'без роли',
-            photoURL: data.photoURL || 'path/to/default-photo.jpg', // или URL фото по умолчанию
+            displayName: data.displayName || 'Sin nombre',
+            email: data.email || 'Usuario desconocido',
+            rol: data.rol || 'Sin role',
+            photoURL: data.photoURL || 'path/to/default-photo.jpg', 
         };
     } else {
-        console.log('Нет такого пользователя:', userId);
+        console.log('No existe tal usuario:', userId);
         return null;
     }
 }
 
 
-/**
- * Загружает профиль пользователя по его user_id.
- */
 
 export async function updateTripSeats(tripId, numSeats) {
     if (!tripId) throw new Error("Trip ID is required");
 
-    const tripRef = doc(db, "viajes", tripId); // Изменено с "trips" на "viajes"
+    const tripRef = doc(db, "viajes", tripId); 
 
-    // Проверяем, существует ли документ
     const tripSnap = await getDoc(tripRef);
     if (!tripSnap.exists()) {
         throw new Error(`Document with ID ${tripId} does not exist`);
     }
 
-    // Обновляем поле numSeats
     await updateDoc(tripRef, { numSeats });
     console.log(`Updated trip ${tripId} with ${numSeats} seats`);
 }
