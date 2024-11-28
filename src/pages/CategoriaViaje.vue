@@ -49,7 +49,7 @@ const tiers = [
   {
     name: 'Viaje común',
     id: 'tier-hobby',
-    image: '../public/100.jpg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/omnicar-80e07.firebasestorage.app/o/100.jpg?alt=media&token=bcd20697-553d-44dd-8060-51318705c40f',
     features: [
       'Encuentra pasajeros para tu viaje. Publica tu trayecto indicando el punto de la partida y el destino de tu ruta para compartir los gastos y hacer el trayecto más ameno.',
     ],
@@ -58,7 +58,7 @@ const tiers = [
   {
     name: 'Viaje a un evento',
     id: 'tier-enterprise',
-    image: '../public/evento.jpg',
+    image: 'https://firebasestorage.googleapis.com/v0/b/omnicar-80e07.firebasestorage.app/o/evento.jpg?alt=media&token=41022a30-bde4-41d4-af51-380505331dd4',
     features: [
       'Dirígete a un evento y comparte la experiencia desde el camino. Publica tu viaje y encuentra compañeros que también asistirán al mismo concierto, partido u otra actividad, compartiendo los gastos y la diversión.',
     ],
