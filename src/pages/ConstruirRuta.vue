@@ -1,7 +1,7 @@
 <template>
               <BaseHeading1 class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4">Crear un viaje
               </BaseHeading1>
-    <div id="map-container" class="flex h-[75vh] w-full rounded-lg shadow-2xl">
+    <div id="map-container" class="flex h-[75vh] w-full rounded-lg shadow-2xl mb-40">
 
         <div id="map" class="flex-grow rounded-lg">
 
@@ -413,7 +413,7 @@ export default {
 
 .form-container {
     background-color: #ffffffce;
-    z-index: 9999;
+    z-index: 9989;
 }
 
 .no-spinner {
