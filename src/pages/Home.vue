@@ -1,5 +1,4 @@
 <template>
-
     <div class="mx-auto py-8 sm:px-6 sm:py-12 lg:px-8">
         <div class="relative isolate overflow-hidden bg-gray-100 px-6 pt-16 shadow-2xl rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0 flex flex-col lg:flex-row">
             <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl"
@@ -46,11 +45,9 @@
             </div>
             <div class="mx-auto max-w-7xl px-6 lg:px-8">
                 <div class="flex flex-col items-center justify-center text-center">
-    <!-- Заголовок всегда сверху и по центру -->
     <h4 class="text-5xl font-semibold tracking-tight text-green-700 sm:text-5xl mb-8 lg:mb-12">Ahora eres parte de
         OmniCar</h4>
     
-    <!-- Контейнер для параграфов -->
     <div class="flex flex-col lg:flex-row lg:justify-between lg:gap-x-8 w-full">
         <p class="text-pretty text-lg font-medium text-black sm:text-xl/8 lg:w-1/2">
             OmniCar conecta a los conductores y los pasajeros para que puedan realizar viajes compartidos.
