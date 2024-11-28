@@ -1,7 +1,8 @@
 <template>
+      <BaseHeading1 class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4">Buscar viajes
+      </BaseHeading1>
     <div id="map-container" class="relative w-full mb-40 shadow-2xl">
         <div id="map" class="h-[75vh] w-full rounded-lg"></div>
-        <!-- Контейнер формы, размещённый поверх карты -->
         <div class="form-container absolute bottom-3 right-3 w-80 p-4 shadow-lg rounded-lg bg-white 
             sm:right-2 sm:bottom-2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 ">
             <div class="mb-4 suggestions-container ">
@@ -22,7 +23,6 @@
                 Buscar
             </button>
         </div>
-
     </div>
 </template>
 
@@ -95,7 +95,7 @@ export default {
             const data = await response.json();
             const route = data.routes[0].geometry;
 
-            this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2); // Переводим в километры
+            this.routeInfo.distance = (data.routes[0].distance / 1000).toFixed(2); 
             const totalMinutes = Math.round(data.routes[0].duration / 60);
             const hours = Math.floor(totalMinutes / 60);
             const minutes = totalMinutes % 60;
