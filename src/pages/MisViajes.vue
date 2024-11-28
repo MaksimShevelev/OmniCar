@@ -1,8 +1,7 @@
 <template>
     <div class="space-y-8 mb-40">
-      <h2 class="text-2xl font-semibold text-gray-900 text-center">Mis Viajes</h2>
-  
-      <!-- Список поездок -->
+      <h2 class="text-center mt-4 text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-3xl">Mis Viajes</h2>
+
       <div v-if="userTrips.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="trip in userTrips" :key="trip.id" class="border p-4 rounded-lg shadow">
             <p class="text-sm text-gray-600 mt-4">
@@ -27,7 +26,6 @@
             <strong>Descripción:</strong> {{ trip.description || 'No especificada' }}
           </p>
   
-          <!-- Mostrar opciones -->
           <div v-if="trip.options && trip.options.length" class="mt-4">
             <h4 class="text-sm font-semibold text-gray-800">Opciones:</h4>
             <ul class="list-disc pl-5">
@@ -38,7 +36,6 @@
             </ul>
           </div>
   
-          <!-- Mostrar фото -->
           <div v-if="trip.mapSnapshot" class="mt-4">
             <h4 class="text-sm font-semibold text-gray-800">Mapa de la ruta:</h4>
             <img :src="trip.mapSnapshot" alt="Mapa del viaje" class="w-full h-auto rounded-lg mt-2" />
@@ -48,7 +45,6 @@
         </div>
       </div>
   
-      <!-- Пустой список -->
       <p v-else class="text-center text-gray-600">No tienes viajes publicados aún.</p>
     </div>
   </template>
@@ -66,7 +62,6 @@
   
       const fetchUserTrips = () => {
         subscribeToTrips((trips) => {
-          // Фильтруем поездки по текущему пользователю
           userTrips.value = trips.filter((trip) => trip.user_id === userId.value);
         });
       };
@@ -74,7 +69,7 @@
       const fetchUserId = () => {
         subscribeToAuthState((userData) => {
           userId.value = userData.id;
-          fetchUserTrips(); // Обновляем список поездок после получения userId
+          fetchUserTrips();
         });
       };
   
@@ -99,8 +94,3 @@
     },
   };
   </script>
-  
-  <style scoped>
-  /* Добавьте стили при необходимости */
-  </style>
-  
