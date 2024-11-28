@@ -19,12 +19,12 @@
     <div class="mb-4 flex items-center space-x-4">
         <img
             :src="trip.photoURL || 'path/to/default-photo.jpg'"
-            alt="Фото профиля"
+            alt="Foto de perfil"
             class="w-20 h-20 rounded-full border-2 border-gray-300 object-cover"
         />
         <div>
             <h1 class="inline-flex items-center text-3xl space-x-2">
-                <b>{{ trip.displayName || 'Имя отсутствует' }}</b>
+                <b>{{ trip.displayName || 'Sin nombre' }}</b>
             </h1>
         </div>
     </div>
@@ -53,7 +53,7 @@
 
                   </span>
                   <strong class="text-gray-900 hidden sm:inline">Origen - </strong>
-<span class="text-green-700">{{ trip.origin || 'Не указан' }}</span>
+<span class="text-green-700">{{ trip.origin || 'No especificado' }}</span>
 
                 </h2>
               </div>
@@ -75,22 +75,14 @@
 
 
                   </span>
-                  <strong class="text-gray-900 hidden sm:inline">Destino - </strong><span class="text-green-700">   {{ trip.destination || 'Не указано' }} </span>
+                  <strong class="text-gray-900 hidden sm:inline">Destino - </strong><span class="text-green-700">   {{ trip.destination || 'No especificado' }} </span>
                 </h2>
 
                 <div class="flex items-center gap-2 mt-2 mb-4">
                   <div class="inline-flex items-center text-2xl text-green-700 px-4 py-2 border rounded-xl shadow">
                   <span class="mr-2">
-                    <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg"
-                      xmlns:xlink="http://www.w3.org/1999/xlink">
-                      <rect width="38" height="38" fill="url(#pattern0_230_9576)" />
-                      <defs>
-                        <pattern id="pattern0_230_9576" patternContentUnits="objectBoundingBox" width="1" height="1">
-                          <use xlink:href="#image0_230_9576" transform="scale(0.02)" />
-                        </pattern>
-                        <image id="image0_230_9576" width="50" height="50"
-                          xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAByklEQVR4nO2ZPUvDUBSGn8HFwaGICkVExE3EoYMIIh26OomI6HAnVwcdozjW4h/oFCf/QNXFobg4OepY3NRFBBc/lkrwFg6hxZs2aW7a+8K7PJCevBzObXICTk6pqgI0tPczXAMfaGqfZLgGmQ0yr1t9DdwAz6JIQ7O43a7GpQ411U2IbeBL/KgNfgeKUUIsAT8W3HizQxjjzpyLC1+AA2APuBO8plncblfDAz4EPzYN8iAu2rFk2D3Bg5kx0pO4qGhJECV4vdcgm0BZuxTv/f9bQ8UZJE0pF4S/jpwldDpFtd9rR2x0faiD3Cf0TBXVj27YGcLjdwyY084LPiJ4YKkZwUcFnxA81+8gnYrMhobUpEZfHlFcEDLSkX5IuSAMcEcqHZZnG4JfCD4teGCpW8GXDWqoOINEHURrj19/UIIs6NfPUuifOi94QfBRwcOvxquC5wxqKHdqMcCnlgKq2uuCrwgeLPNaGhe8alMQP8Zhd0FIcEFXEDzYeLSUE7xsU0fSlOomiFxi72KHvNCW3khyqF+Bw5SXc17os8KRaZBF4DuhnVSvfgMmo7RyC/i0MMQaXSh41jkFrlJeztX0V6pInXBycnLCev0CyQy2aCV3ZFcAAAAASUVORK5CYII=" />
-                      </defs>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" fill="black" class="bi bi-calendar2-week-fill" viewBox="0 0 16 16">
+                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5M8.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM3 10.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
                     </svg>
                   </span>
                   {{ trip.date || 'No especificada' }} - {{ trip.time || 'No especificado' }}
@@ -182,21 +174,29 @@
 
     <p><strong>Descripción:</strong> {{ selectedTrip.description || 'No especificado' }}</p>
 
-              <div class="bg-gray-200 mb-10 p-4 rounded mt-4 w-full">
-                <h3 class="text-lg mt-2">Preguntas</h3>
-                <ul class="ml-4">
-                  <li v-for="comment in comments[selectedTrip.id]" :key="comment.id">
-                    <b>{{ comment.rol }}</b> - <b>{{ comment.displayName }}:</b> {{ comment.text }}
-                  </li>
-                </ul>
-                <form @submit.prevent="handleCommentSubmit(selectedTrip.id)" class="mt-2">
-                  <textarea v-model="newComment[selectedTrip.id]" class="w-full min-h-8 p-2 border rounded"></textarea>
-                  <button type="submit"
-                    class="mt-2 py-2 px-4 rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
-                    Enviar
-                  </button>
-                </form>
-              </div>
+    <div class="bg-gray-200 mb-10 p-4 rounded mt-4 w-full">
+  <h3 class="text-lg mt-2">Preguntas</h3>
+  <ul class="ml-4">
+    <li v-for="comment in comments[selectedTrip.id]" :key="comment.id">
+      <b>{{ comment.rol }}</b> - <b>{{ comment.displayName }}:</b> {{ comment.text }}
+    </li>
+  </ul>
+  <form @submit.prevent="handleCommentSubmit(selectedTrip.id)" class="mt-2 flex flex-col">
+    <textarea
+      v-model="newComment[selectedTrip.id]"
+      class="w-full min-h-8 p-2 border rounded"
+    ></textarea>
+    <div class="flex justify-end mt-2">
+      <button
+        type="submit"
+        class="py-2 px-4 rounded bg-green-700 text-white transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
+      >
+        Enviar
+      </button>
+    </div>
+  </form>
+</div>
+
 
               
               <div class="flex justify-center border-t items-center pt-2 mt-2">
@@ -205,7 +205,7 @@
     @click="handleReserve"
     class="mt-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900"
   >
-    Reservar
+    Reservar asiento
   </button>
   <BaseLoader v-else class="mt-4" />
 </div>
