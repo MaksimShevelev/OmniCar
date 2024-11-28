@@ -1,7 +1,8 @@
 <template>
-
+              <BaseHeading1 class="flex flex-col rounded-x justify-center text-3xl items-center text-center mt-4">Crear un viaje
+              </BaseHeading1>
     <div id="map-container" class="flex h-[75vh] w-full rounded-lg shadow-2xl">
-        <!-- Карта -->
+
         <div id="map" class="flex-grow rounded-lg">
 
         <div class="form-container mb-4 absolute bottom-3 right-3 w-70 p-4 shadow-lg rounded-lg 
@@ -9,7 +10,7 @@
 
             <section class="w-full">
                 <div class="mb-4 suggestions-container">
-                    <label class="block mb-2"><strong>Origen:</strong></label>
+                    <label class="block mb-2"><strong>Origen</strong></label>
                     <input v-model="origin.city" @input="getSuggestionsDebounced(origin.city, 'origin')"
                         class="p-2 border rounded mb-2 responsive-input" />
                     <ul v-if="originSuggestions.length" class="suggestions-list">
@@ -20,7 +21,7 @@
                 </div>
 
                 <div class="mb-4 suggestions-container">
-                    <label class="block mb-2"><strong>Destino:</strong></label>
+                    <label class="block mb-2"><strong>Destino</strong></label>
                     <input v-model="destination.city" @input="getSuggestionsDebounced(destination.city, 'destination')"
                         class="p-2 border rounded responsive-input" />
                     <ul v-if="destinationSuggestions.length" class="suggestions-list">
@@ -31,9 +32,8 @@
                 </div>
 
                 <div class="mb-4">
-                    <label class="block mb-2"><strong>Cantidad de asientos:</strong></label>
+                    <label class="block mb-2"><strong>Cantidad de asientos</strong></label>
                     <div class="flex items-center space-x-2">
-                        <!-- Кнопка минус -->
                         <button @click="decrementSeats"
                             class="p-2 bg-gray-100 border rounded hover:bg-gray-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -43,12 +43,10 @@
                             </svg>
                         </button>
 
-                        <!-- Поле ввода -->
                         <input type="number" v-model.number="numSeats" min="1" max="4"
                             class=" p-1 border rounded w-12 text-center no-spinner"
                             @input="numSeats = Math.max(1, Math.min(numSeats, 4))" />
 
-                        <!-- Кнопка плюс -->
                         <button @click="incrementSeats"
                             class="p-2 bg-gray-100 border rounded hover:bg-gray-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -78,25 +76,28 @@
 
         
     </div>
-    <div v-if="routeInfo.distance && (routeInfo.duration.hours || routeInfo.duration.minutes)" class="mx-auto mb-40 lg:w-1/3 p-4 border-t shadow-lg rounded-lg">
+    <div v-if="routeInfo.distance && (routeInfo.duration.hours || routeInfo.duration.minutes)" class="mx-auto mb-40 p-4 border-t shadow-lg rounded-lg w-[40%]">
 
 
 <h2 class="my-4 text-2xl text-center text-green-700 font-semibold">Información sobre la ruta</h2>
 
 
-<p class="my-4 "><strong>Distancia:</strong> {{ routeInfo.distance }} km</p>
-<p class="my-4 "><strong>Tiempo de viaje:</strong> {{ routeInfo.duration.hours }}
+<p class="my-4 "><strong>Distancia - </strong> {{ routeInfo.distance }} km</p>
+<p class="my-4 "><strong>Tiempo de viaje - </strong> {{ routeInfo.duration.hours }}
     hs {{ routeInfo.duration.minutes }} min</p>
-<p class="my-4 "><strong>Precio recomendado:</strong> {{
-    routeInfo.recommendedPrice }} $ ARS</p>
+<p class="my-4 "><strong>Precio recomendado por 1 asiento - </strong> {{
+    routeInfo.recommendedPrice }} $ ARS <span class="info-icon" title="El precio recomendado se calcula según la distancia del recorrido, la cantidad de asientos, el consumo promedio de combustible de tu auto y el precio actual del tipo de combustible que usa tu vehículo">
+        &#128712;
+    </span></p>
+        
 <div class="mb-4">
-<label class="block mb-2"><strong>Precio $ ARS:</strong></label>
+<label class="block mb-2"><strong>Precio por 1 asiento</strong></label>
 <input
 type="number"
 v-model.number="customPrice"
 class="p-2 border rounded responsive-input"
 @input="customPrice = Math.max(1, customPrice)"
-/>
+/> $ ARS 
 </div>
 
 
@@ -105,7 +106,6 @@ class="p-2 border rounded responsive-input"
     Continuar
 </button>
 
-<!-- Show loader if saving -->
 
 </div>
 
@@ -152,7 +152,7 @@ export default {
             },
             customPrice: '',
             map: null,
-            isSaving: false, // Показать BaseLoader во время сохранения
+            isSaving: false, 
             getSuggestionsDebounced: null,
         };
     },
@@ -263,7 +263,7 @@ export default {
         async saveTrip() {
             if (this.isSaving) return;
 
-            this.isSaving = true; // Показываем BaseLoader
+            this.isSaving = true; 
 
             const tripData = {
                 origin: this.origin.city,
@@ -282,7 +282,7 @@ export default {
                 console.error('Error saving trip:', error);
                 alert('Error saving trip.');
             } finally {
-                this.isSaving = false; // Скрываем BaseLoader
+                this.isSaving = false; 
             }
         },
 
@@ -335,11 +335,34 @@ export default {
 };
 </script>
 
-
-
-
-
 <style>
+.info-icon {
+        font-size: 20px;
+        color: #239e61;
+        cursor: pointer;
+        margin-left: 8px;
+        position: relative; 
+    }
+
+    .info-icon:hover {
+        text-decoration: underline;
+    }
+
+    .info-icon[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        background-color: #239e61;
+        color: #fff;
+        border-radius: 5px;
+        padding: 8px;
+        font-size: 14px;
+        top: 25px; /* Отступ сверху от иконки */
+        left: 0; /* Отступ слева от иконки */
+        z-index: 1; /* Чтобы текст не разрывался на несколько строк */
+        width: max-content; /* Автоматическая ширина, чтобы окно подстраивалось под контент */
+        max-width: 300px; /* Максимальная ширина для ограничения окна */
+    }
+
 .suggestions-list {
     border: 1px solid #ccc;
     background-color: white;
@@ -393,17 +416,12 @@ export default {
     z-index: 9999;
 }
 
-/* Убирает стрелочки в большинстве браузеров */
 .no-spinner {
     -moz-appearance: textfield;
-    /* Firefox */
     -webkit-appearance: none;
-    /* Chrome, Safari, Edge */
     appearance: none;
-    /* Современные браузеры */
 }
 
-/* Убирает стрелки для полей с типом number в Safari */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -411,13 +429,13 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .responsive-input {
-    width: 100%; /* Полная ширина по умолчанию */
-    max-width: 200px; /* Максимальная ширина */
+    width: 100%; 
+    max-width: 200px; 
   }
 
   @media (min-width: 640px) {
     .responsive-input {
-      max-width: 300px; /* Увеличиваем ширину на больших экранах */
+      max-width: 300px; 
     }
   }
 </style>
