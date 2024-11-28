@@ -5,7 +5,7 @@
             ></div>
         </div>
       <div class="mx-auto max-w-4xl text-center mt-4 mb-10">
-      <h1 class=" text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-3xl">Viajes por eventos</h1>
+      <h1 class=" text-balance text-3xl font-semibold tracking-tight text-gray-900 sm:text-3xl">Viajes por eventos</h1>
     </div>
     <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow mt-2 mb-40">
       <div class="flex items-center justify-between mb-4">
