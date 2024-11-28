@@ -2,16 +2,14 @@
     <BaseHeading1 class="flex flex-col justify-center text-3xl items-center text-center mt-4">Opciones del viaje
     </BaseHeading1>
     <div class="mb-40 p-4 flex flex-col">
-    <!-- Форма с секциями -->
     <form @submit.prevent="handleSubmit" class="flex flex-col lg:flex-row w-full gap-10">
-        <!-- Левая секция -->
         <section class="lg:w-1/2 p-4 lg:border-r">
             <div class="mb-4">
-                <h3 class="block mb-2 text-xl text-green-700">Descripción del viaje</h3>
+                <label for="tripDate" class="block mb-2 text-xl text-green-700">Descripción del viaje</label>
                 <textarea
                     id="text"
                     class="w-full min-h-8 p-2 border rounded"
-                    v-model="newMessage.text"
+                    v-model="newViaje.text"
                 ></textarea>
             </div>
 
@@ -42,32 +40,33 @@
             <div class="mb-4">
                 <h3 class="block mb-2 text-xl text-green-700">¿Que tipo de la reserva prefieres agregar?</h3>
                 <label class="inline-flex items-center">
+                    
                     <input
                         type="radio"
                         value="revisar"
                         v-model="tripType"
-                        class="mr-2"
+                        class="p-2"
                     />
-                    Revisar cada solicitud
-                    <span class="ml-3 " v-html="tripTypeIcons.revisar"></span>
+                    <span class="p-3" v-html="tripTypeIcons.revisar"></span>
+                     Revisar cada solicitud
                 </label>
-                <label class="inline-flex items-center lg:ml-4 ">
+                <label class="inline-flex items-center mt-5 lg:ml-3">
+                    
                     <input
                         type="radio"
                         value="automaticomente"
                         v-model="tripType"
-                        class="mr-2 lg:ml-3"
+                        class="p-2"
                     />
-                    Confirmación automática
-                    <span class="ml-3 " v-html="tripTypeIcons.automaticomente"></span>
+                    <span class="p-1" v-html="tripTypeIcons.automaticomente"></span>
+                     Confirmación automática
                 </label>
             </div>
         </section>
 
-        <!-- Правая секция -->
         <section class="lg:w-1/2 p-4">
             <div class="mb-4">
-                <h3 class="block mb-2 text-xl text-green-700">Opciones</h3>
+                <label for="tripDate" class="block mb-2 text-xl text-green-700">Opciones</label>
                 <div
                     v-for="option in availableOptions"
                     :key="option"
@@ -86,7 +85,6 @@
         </section>
     </form>
 
-    <!-- Кнопка под формой -->
     <div class="flex justify-center border-t items-center pt-10 mt-10">
         <button
             type="button"
@@ -120,7 +118,7 @@ import mapboxgl from 'mapbox-gl';
 import BaseLoader from '../components/BaseLoader.vue';
 import BaseHeading1 from '../components/BaseHeading1.vue';
 import { subscribeToAuthState } from '../services/auth.js';
-import { saveChatMessage, subscribeToChatMessages, saveComment, subscribeToComments, updateTrip } from '../services/viajes.js';
+import { saveViajes, subscribeToViajes, saveComment, subscribeToComments, updateTrip } from '../services/viajes.js';
 
 let unsubscribeAuth = () => { };
 
@@ -132,8 +130,8 @@ export default {
     components: { BaseHeading1, BaseLoader },
     data() {
         return {
-            messages: [],
-            newMessage: { text: '' },
+            viajes: [],
+            newViaje: { text: '' },
             comments: {},
             newComment: {},
             loggedUser: { id: null, email: null, displayName: null, rol: null },
@@ -143,12 +141,12 @@ export default {
             options: [],
             isUpdating: false,
             description: '',
-            showModal: false, // Controls the loader visibility
+            showModal: false, 
             availableOptions: [
                 'Se permite fumar', 'Se permite la comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho',
                 'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar'
             ],
-            availableOptions: ['Se permite fumar', 'Se permite la comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho', 'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar'], // Доступные опции для checkbox
+            availableOptions: ['Se permite fumar', 'Se permite la comida y bebida', 'Se permiten mascotas', 'No me gusta hablar mucho', 'El baúl está vacío', 'Viajo hasta el destino sin paradas', 'Hay puertos USB para cargar'], 
             optionIcons: {
                 'Se permite fumar': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect width="25" height="25" fill="url(#pattern0_40_3365)"/>
@@ -190,15 +188,16 @@ export default {
 </defs>
 </svg>
 `,
-                'El baúl está vacío': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="25" height="25" fill="url(#pattern0_42_2182)"/>
+                'El baúl está vacío': `<svg width="35" height="35" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<rect width="50" height="50" fill="url(#pattern0_260_9573)"/>
 <defs>
-<pattern id="pattern0_42_2182" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_42_2182" transform="scale(0.02)"/>
+<pattern id="pattern0_260_9573" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_260_9573" transform="scale(0.02)"/>
 </pattern>
-<image id="image0_42_2182" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACIklEQVR4nO2YQUgUURjHf0WpYGlhYHvJWxQePNSlOuYhPFkdI1kPHcSwizfpICRCVy91aj1FJ/HiSQ8ipqAFaVIdAgmNiFQKxSJkY+Q/8YpxkZ03uzPw/eCxs7Pf/P/ve9/Me/MWDMMwDMMwjDTRBrwAvgDFMtt3YBLoqFYSt4GfMRKIao8qncR5YEfmI8C5GFqngQfAL+nlfXTwMjAObGm0F4F7wFEn5ggwJdNR/JGX5jbQGlds44CSjwHHFdOlc1+BJvzyTNorQH0coR5gAGgBGoC7qk5RJk1KoKjffBN0/q30C77FL6ncgfhHfU7qFkuCVscv71s8mBp/Szx4di6QLN3y2tUUXzbBw30DGASeAwvOVPuQylCQ3w9gBngK9AHtQO4wAheB5QMe+iWghspQD7wpseZsKMEnwB2gzr24GfiswFXgsWapK8AZqkNOVehTVYLOb0YktqrlY58RnZwGTpBucsB1oN+p3LdwwD/pxN/MMkINMOG8abCnL+HilyXa1Pc1nPstixxT3/eynsg//bdEUkLRKpLWiqzr4CrZ45o7/Q5HLP1zhxCZ87x3j+M7FK6Qw05lwnayhFhjAkmU47umJCJfal8qqLOE4C3FzOIP7769Cn6nEfifU8AHxQTbZF949w3K9FoXvAduai/foBEJxRY971MS8c05olHtFXDWYxKJ+tYC94F5/TGwrRmjN+EdY22VfA3DMAzDIC38AQjRG/UiMyBfAAAAAElFTkSuQmCC"/>
+<image id="image0_260_9573" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAACFklEQVR4nO3YTYhNYRzH8c+gZIMh2Q0iOxQlIjuNnRRZKdlLWLCUjRQLZWOUmrKQorkLTZkFySyUl0TJ20bGIJHyOuLo6Ll1u5173Xvuvefeqedbv835P+f8/79zzvNKJBKJRCKRSBbrcQrXcAd38RQv8R4fMYUEnzAZYvdwEycwoIssQikU2Kq+Ykc3TMzDozaZKOs7Vhdt5GqbTSRBt9FXJ28a24xjGA6/dW72dshEErSnRt6FuFXV9k1eE0vxucNGJjG3Ku8SPMlo+zqPiRkZb6RTOl2Rd1UouDKejn5XsDaPkaMFmUjwKxjYgA9VsRthsMnFGvws0EiCx2Ekq7x2GbPzmkhvfFiwiSRDZ8Pv3RRpZ9uCA7jeAyaeYydW1DMzH1txBJfwDH96oPikhr5gDINlA7NwBj96oLgkh35je2rkeA8U06oepEZe9UAhrWpKj/eDpAl1vYBoRPwipm8fGQmzaD8OhTG7iKJGmsybxr2tEZzAnKrZ/1wBJiZy5E2XLv/W/FnB0YxlzL4CjIzmyLu/vKq9mDGfZL2ZoS59kaEabd/hYLXrlThZ1bAUri/A4QL7SKlO3vuh+HWYqQ5jDa48l2sffQ1uE76F84KGGAidp9bD0h3iLu0nPVh48Z/11O5mH7oY5yuOOMsaxyadPbW8kLGdHg8bvNykm62N2IZliqM/HMANhi8ViUQikUgkYhryF7st3P2313dLAAAAAElFTkSuQmCC"/>
 </defs>
 </svg>
+
 
 `,
                 'Viajo hasta el destino sin paradas': `<svg width="35" height="35" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -224,20 +223,15 @@ export default {
 
 `,
             },
-            tripType: 'revisar', // значение по умолчанию
+            tripType: 'revisar', 
             tripTypeIcons: {
-                revisar: `<svg width="35" height="35" class="ml-3" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="35" height="35" fill="url(#pattern0_47_3305)"/>
-<defs>
-<pattern id="pattern0_47_3305" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_47_3305" transform="scale(0.02)"/>
-</pattern>
-<image id="image0_47_3305" width="50" height="50" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEJklEQVR4nO2ZW4hVZRTHf42j44WsMQ0nxCyTimIwKy+gSOFDOfSQYPaSgvpQEr0o6ouRWtDFQhE1BRF6iUSDhFC0wEy8pC8pKD4YmhXK5F0c1GZOLPhvWBzOPmd/+3KO4vzhg3P2Xt9a67ut77/Whl7cf3gCGMU9jmHATbWh3MN4Hiip2e+7Dk8DZ4FNOQ5kI9AJtFNHvJHQwaQDsYnpkdwM6oh+wHkZXpfDQFZLphPoT53xiYxfAwZnGMgA4KJkPqUBGAn8JwfezTCQeXrfrVDdEOyQE79nGMgRvf+RBuJ15+j4Cu9ty/2j9mCF9+2uf0cRDvYBtgO7gOFV5JqAQ7rwnouRaVGrhMeBK8B+6YrDNK26bcMgDAHuaKZOA09VkTUHHiI94gYZ4VVNlPnyAynwDnBbCi5UmfEiMQG4IR/+BsZkOQORoo8DV9QGPhWYqTZVz1oD9Hwl23ZnPUNGvAisAtqqyNjWehvYAJxwBziumcx6YFaNbdkGfJRlJZLiWWANcD2B83GtC/gGeIEGYBywt4JTJ0VZZiq02ow2q7Xp2VtajZMV+u+V7sIxVCy12xm/BHwBjE6hb7S27SWnr1s2LJcpBHZh/esMGsFbAAzMQfdA6ep0+i/mfUn20YGLVqFbe7qIjK9VZy7icD36b1szE4xi7HGzdCaGiuSN8bIV2d1ThWHXhIXFA07Zz8Cj1A+PADud/aO6n4LwsDhUpOTzGlyoKDQpkER+HJZvidC/bCVWpswg7fAeFDO4IZ3vAX0zJHElTXCiLHKz62SHPBTDNHNxF+ChlKF1hdOxpZbwAif8dcqt8GuC23xfyq26yel4vxrTjNjufm2PUMwKoCZ2w6eh/AfU33ydWC7QrMTFBP6qQRCrYXvAQLaltNEmSm86jpefuUXOgFH3tDgWMJC4PD8JOpyepT7djHKO75ywZYUfhIQ7V0hI0n4L0DscWAiMcM+2So9lj0/ag8/04ErZltqZYgtsDBhI0mDygGPaRo0iPCafSxoDkxXvy0uVS5zR6QmNvuxKn9WaybyUUOds16+8+GA+/1KLNvVz2d7pAJb7ZYKBGHVPgiGqF5QUrVKzi1fcDNe8hIQm3cRRFca3O8r9mxJuqR2u31gyYr1zZG5AP8uzP9Sh3KrfIbn3Emd3OTmgxUWjLq1S0ZjhVvQn5US5YJTLDq3QMIni0AHckq1zRaQOVha6LANXAyJZaFGwy9Wy7ANQIZio7yElpaOLc8pT+iqSldQ66/HNsV3h2GduSe+ESpgizhTpO6V6Wd3S0N1lYfXbgLNjq/iavon4C/T7mM8PhcLi/Bz3LdHP6Abt96je265PA/NFM86V9flTRb2GwkjlMtH/UmD7Q+dsEHcRmoE3axSye0T11yrMNqKgEYxBun8miEyOzKkq2YteUEf8D6V8uXcmN1bmAAAAAElFTkSuQmCC"/>
-</defs>
-</svg>`, // SVG иконка для типа "revisar"
+                revisar: `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+  <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+</svg>`, 
                 automaticomente: `<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-lightning" viewBox="0 0 16 16">
   <path d="M5.52.359A.5.5 0 0 1 6 0h4a.5.5 0 0 1 .474.658L8.694 6H12.5a.5.5 0 0 1 .395.807l-7 9a.5.5 0 0 1-.873-.454L6.823 9.5H3.5a.5.5 0 0 1-.48-.641zM6.374 1 4.168 8.5H7.5a.5.5 0 0 1 .478.647L6.78 13.04 11.478 7H8a.5.5 0 0 1-.474-.658L9.306 1z"/>
-</svg>` // SVG иконка для типа "automaticomente"
+</svg>` 
             },
         };
     },
@@ -253,7 +247,7 @@ export default {
     methods: {
         async handleSubmit() {
             try {
-                this.isUpdating = true; // Show loader
+                this.isUpdating = true; 
 
                 const selectedIcon = this.tripTypeIcons[this.tripType];
                 const additionalData = {
@@ -261,62 +255,61 @@ export default {
                     time: this.tripTime,
                     type: { name: this.tripType, icon: selectedIcon },
                     options: this.options.map(option => ({ name: option, icon: this.optionIcons[option] })),
-                    description: this.newMessage.text
+                    description: this.newViaje.text
                 };
 
                 if (!selectedIcon) {
-                    console.error("Иконка для выбранного типа поездки отсутствует");
+                    console.error("No hay ningún ícono para el tipo de viaje seleccionado");
                     return;
                 }
 
                 await updateTrip(this.tripId, additionalData);
 
-                // Show modal on success
                 this.showModal = true;
             } catch (error) {
-                console.error('Ошибка при обновлении поездки:', error);
+                console.error('Error al actualizar el viaje:', error);
             } finally {
-                this.isUpdating = false; // Hide loader after completion
+                this.isUpdating = false; 
             }
         },
         confirmModal() {
             this.showModal = false;
-            this.$router.push('/viajes'); // Redirect after modal confirmation
+            this.$router.push('/viajes'); 
         }
 
 
 
         ,
-        async handleCommentSubmit(messageId) {
-            if (!this.newComment[messageId]?.trim()) {
+        async handleCommentSubmit(viajeId) {
+            if (!this.newComment[viajeId]?.trim()) {
                 console.error("El texto del comentario está vacío");
                 return;
             }
 
             await saveComment({
-                viajeId: messageId,
+                viajeId: viajeId,
                 user_id: this.loggedUser.id,
-                text: this.newComment[messageId],
+                text: this.newComment[viajeId],
                 displayName: this.loggedUser.displayName || 'Anónimo',
                 rol: this.loggedUser.rol,
             });
 
-            this.newComment[messageId] = '';
-            this.fetchComments(messageId);
+            this.newComment[viajeId] = '';
+            this.fetchComments(viajeId);
         },
-        fetchComments(messageId) {
-            subscribeToComments(messageId, (comments) => {
-                if (!this.comments[messageId]) {
-                    this.comments[messageId] = [];
+        fetchComments(viajeId) {
+            subscribeToComments(viajeId, (comments) => {
+                if (!this.comments[viajeId]) {
+                    this.comments[viajeId] = [];
                 }
-                this.comments[messageId] = comments;
+                this.comments[viajeId] = comments;
             });
         },
     },
     async mounted() {
-        subscribeToChatMessages(newMessages => {
-            this.messages = newMessages;
-            this.messages.forEach(message => this.fetchComments(message.id));
+        subscribeToViajes (newViajes => {
+            this.viajes = newViajes;
+            this.viajes.forEach(viaje => this.fetchComments(viaje.id));
         });
         unsubscribeAuth = subscribeToAuthState(newUserData => this.loggedUser = newUserData);
     },
