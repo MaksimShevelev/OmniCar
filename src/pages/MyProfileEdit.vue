@@ -3,7 +3,6 @@
       <BaseHeading1 class="text-3xl text-gray-900 mt-4">Editar mi perfil</BaseHeading1>
   
       <form @submit.prevent="handleSubmit" class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <!-- Información personal -->
         <section class="space-y-4">
           <h2 class="inline-block bg-gray-100 text-xl p-2 border rounded-xl shadow text-gray-700 font-semibold">Información personal</h2>
   
@@ -42,7 +41,6 @@
           </div>
         </section>
   
-        <!-- Información sobre el auto -->
         <section class="space-y-4">
           <h2 class="inline-block bg-gray-100 text-xl p-2 border rounded-xl shadow text-gray-700 font-semibold">Información sobre auto</h2>
   
@@ -77,7 +75,6 @@
           </div>
         </section>
   
-        <!-- Кнопка отправки -->
         <div>
           <button type="submit" class="transition-all py-2 px-4 rounded bg-green-700 text-white focus:bg-green-500 hover:bg-green-500 active:bg-green-900">
             Actualizar
