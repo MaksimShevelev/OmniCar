@@ -19,7 +19,7 @@
                 class="m-4 px-4 py-2 bg-green-600 text-white rounded text-lg font-semibold transition-all focus:bg-green-500 hover:bg-green-500 active:bg-green-900">aquí</router-link></strong></h3>
         </div>
         <div v-else>
-            <p>Usuario no encontrado.</p> <!-- Сообщение, если пользователь не найден -->
+            <p>Usuario no encontrado.</p> 
         </div>
     </template>
 </template>
@@ -37,7 +37,7 @@ export default {
     data() {
         return {
             loading: false,
-            user: null, // Начально пустой, чтобы избежать ошибок
+            user: null, 
         }
     },
     async mounted() {
