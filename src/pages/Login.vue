@@ -8,7 +8,7 @@
         </div>
         
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-            <img class="mx-auto h-20 w-auto" src="/public/logo.png" alt="Your Company" />
+            <img class="mx-auto h-20 w-auto" src="/public/logo.png" alt="Logo de OmniCar" />
             <BaseHeading1 class="text-center text-3xl/9 font-bold tracking-tight text-gray-900">Ingresar con tu cuenta</BaseHeading1>
         </div>
 
@@ -79,7 +79,6 @@ export default {
                     email: this.user.email,
                     password: this.user.password,
                 });
-                console.log("Usuario autenticado con éxito :D");
 
                 this.$router.push('/home');
             } catch (error) {
